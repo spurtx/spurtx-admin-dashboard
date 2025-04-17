@@ -1,10 +1,11 @@
 import dash from "../../../assets/images/svg/dash-icon.svg";
 import GradientButton from "../../ui/GradientButton";
 import LineCurveRef from "../../graphs/LineCurveRef";
+import CardContainer from "../../ui/CardContainer";
 
 const MostReferrals = () => {
   return (
-    <div className="w-full bg-white p-3 border border-gray-300 rounded-md mt-3">
+<CardContainer>
       <div className="flex justify-between">
         <div>
           <GradientButton
@@ -60,7 +61,7 @@ const MostReferrals = () => {
       />
     </div>
       </div>
-    </div>
+      </CardContainer>
   );
 };
 

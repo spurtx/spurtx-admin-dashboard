@@ -1,3 +1,4 @@
+import CardContainer from "../../ui/CardContainer";
 const TopReferees = () => {
     const referees = [
       { name: "John Doe", referrals: 120 },
@@ -10,7 +11,7 @@ const TopReferees = () => {
     ];
   
     return (
-      <div className="w-full bg-white py-3 border border-gray-300 rounded-md mt-3 text-center">
+      <CardContainer>
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-300">
@@ -31,7 +32,7 @@ const TopReferees = () => {
             ))}
           </tbody>
         </table>
-      </div>
+        </CardContainer>
     );
   };
   

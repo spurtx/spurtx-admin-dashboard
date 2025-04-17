@@ -1,9 +1,10 @@
 import GradientButton from "../../ui/GradientButton";
 import LineCurve from "../../graphs/LineCurve";
+import CardContainer from "../../ui/CardContainer";
 
 const VerifiedUsers = () => {
   return (
-     <div className="w-full bg-white p-3 border border-gray-300 rounded-md mt-3">
+     <CardContainer>
           <div className="flex justify-between">
             <p className="bg-gradient-to-r text-transparent bg-clip-text from-[#00A15D] to-[#C16407]">
               Total Verfied Users
@@ -32,7 +33,7 @@ const VerifiedUsers = () => {
               dataPoints={[160, 250, 170, 290, 330, 400, 150]}
             />
           </div>
-        </div>
+          </CardContainer>
   )
 }
 
