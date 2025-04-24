@@ -12,7 +12,7 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 
-// Register chart.js components
+
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 type ReusableBarChartProps = {
@@ -25,7 +25,7 @@ type ReusableBarChartProps = {
 const StatusBar: React.FC<ReusableBarChartProps> = ({
   labels,
   data,
-  barColor = "#3182CE", // default blue
+  barColor = "#3182CE", 
   label = "Data",
 }) => {
   const chartData: ChartData<"bar"> = {
@@ -47,20 +47,27 @@ const StatusBar: React.FC<ReusableBarChartProps> = ({
       legend: {
         display: false,
       },
+      datalabels: {
+        display: false, // Disables data labels
+      },
     },
     scales: {
       x: {
         grid: {
           display: false,
-          // ✅ `as any` to avoid drawBorder TS error
-          drawBorder: false,
-        } as any,
+        },
+        border: {
+          display: false, // Correct way to remove axis border
+        },
       },
       y: {
         beginAtZero: true,
         grid: {
-          drawBorder: true,
-        } as any,
+          display: true, //Removes horizontal grid lines
+        },
+        border: {
+          display: false, //Correct way to remove axis border
+        },
       },
     },
   };
