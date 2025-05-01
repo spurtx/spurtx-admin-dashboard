@@ -72,25 +72,34 @@ const LineCurve: React.FC<LineCurveProps> = ({
   const options: ChartOptions<"line"> = {
     responsive: true,
     maintainAspectRatio: false,
+    plugins: {
+      datalabels: {
+        display: false, // 🔥 disable datalabels
+      },
+    },
     scales: {
       x: {
         grid: { display: false },
       },
       y: {
         ticks: {
-          callback: (value: number) => {
-            if (showCustomLabels) {
-              const formattedValue = customYLabels.includes(value)
-                ? `$${value / 1000}k`
-                : "";
-              return formattedValue;
+          callback: (value) => {
+            if (typeof value === 'number') {
+              if (showCustomLabels) {
+                const formattedValue = customYLabels.includes(value)
+                  ? `$${value / 1000}k`
+                  : '';
+                return formattedValue;
+              }
+              return value;
             }
-            return value; // Show plain numbers
+            return value; // fallback
           },
         },
       },
     },
   };
+  
 
   return (
     <div style={{ height: "300px", width: "100%" }}>

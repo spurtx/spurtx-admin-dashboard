@@ -57,7 +57,13 @@ const LineCurveOne: React.FC<LineCurveOneProps> = ({
 
   const options: ChartOptions<"line"> = {
     responsive: true,
+    
     maintainAspectRatio: false,
+    plugins: {
+      datalabels: {
+        display: false, 
+      },
+    },
     scales: {
       x: {
         grid: { display: false },
@@ -67,7 +73,9 @@ const LineCurveOne: React.FC<LineCurveOneProps> = ({
           callback: (value: string | number) => `$${Number(value) / 1000}k`, 
         },
       },
+      
     },
+    
   };
 
   return (

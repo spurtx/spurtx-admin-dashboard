@@ -69,7 +69,7 @@ const LineCurveRef: React.FC<LineCurveOneProps> = ({
         ticks: {
           autoSkip: true,
           maxTicksLimit: 3, // Show only three main labels
-          callback: (val, index) => {
+          callback: (index: any) => {
             const monthLabels = ["Jul", "Aug", "Sep"];
             return index % 2 === 0 ? monthLabels[index / 2] : ""; // Only show full month names
           },
@@ -82,6 +82,9 @@ const LineCurveRef: React.FC<LineCurveOneProps> = ({
     plugins: {
       tooltip: {
         enabled: true, // Show hover tooltips
+      },
+      datalabels: {
+        display: false, 
       },
     },
   };

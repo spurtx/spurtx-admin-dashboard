@@ -1,4 +1,4 @@
-import React from 'react'
+
 import TotalMilestones from '../../../components/sync/milestones/TotalMilestones'
 import MilestoneStatus from '../../../components/sync/milestones/MilestoneStatus'
 import Rejection from '../../../components/sync/milestones/Rejection'

@@ -1,7 +1,8 @@
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Legend, Title, Tooltip } from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels"; // 👈
 
-ChartJS.register(ArcElement, Legend, Title, Tooltip);
+ChartJS.register(ArcElement, Legend, Title, Tooltip, ChartDataLabels); // 👈
 
 interface DonutChartProps {
   value: number;
@@ -29,8 +30,13 @@ const DonutChart = ({
     ],
   };
 
-  const options: any = {
+  const options = {
     maintainAspectRatio: false,
+    plugins: {
+      datalabels: {
+        display: false, // 👈 correct placement
+      },
+    },
   };
 
   const textCenter = {
@@ -39,7 +45,7 @@ const DonutChart = ({
       const { ctx, data } = chart;
 
       ctx.save();
-      ctx.font = "11px san-serif";
+      ctx.font = "11px sans-serif";
       ctx.fillStyle = "black";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";

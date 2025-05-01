@@ -27,6 +27,9 @@ const PieChart = ({ value }: { value: string }) => {
       legend: {
         display: false,
       },
+      datalabels: {
+        display: false, 
+      },
     },
   };
 

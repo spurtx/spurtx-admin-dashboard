@@ -43,14 +43,38 @@ const BarChart: React.FC<BarChartProps> = ({ data }) => {
     ],
   };
 
+  // const options: ChartOptions<'bar'> = {
+  //   responsive: true,
+  //   scales: {
+  //     x: {
+  //       grid: { display: false },
+  //     },
+  //     y: {
+  //       type: 'linear', // Explicitly setting the scale type
+  //       ticks: {
+  //         callback: function (value: any) {
+  //           return [100000, 200000, 300000, 400000].includes(Number(value))
+  //             ? `${Number(value) / 1000}k`
+  //             : '';
+  //         },
+  //       },
+  //     },
+  //   },
+    
+  // };
   const options: ChartOptions<'bar'> = {
     responsive: true,
+    plugins: {
+      datalabels: {
+        display: false, // 🔥 This disables datalabels
+      },
+    },
     scales: {
       x: {
         grid: { display: false },
       },
       y: {
-        type: 'linear', // Explicitly setting the scale type
+        type: 'linear',
         ticks: {
           callback: function (value: any) {
             return [100000, 200000, 300000, 400000].includes(Number(value))
@@ -61,7 +85,7 @@ const BarChart: React.FC<BarChartProps> = ({ data }) => {
       },
     },
   };
-
+  
   return <Bar data={chartData} options={options} />;
 };
 

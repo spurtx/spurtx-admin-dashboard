@@ -5,22 +5,26 @@ import {
   ChartOptions,
   ChartData,
 } from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels"; 
 import { Doughnut } from "react-chartjs-2";
 
-// Register only what's needed
+
+ChartJS.register(ArcElement, ChartDataLabels); 
+
+
 ChartJS.register(ArcElement);
 
 type MinimalDoughnutChartProps = {
-  data: number[];         // e.g. [70, 30]
-  colors?: string[];      // e.g. ['#3182CE', '#E2E8F0']
+  data: number[];         
+  colors?: string[];      
 };
 
 const MinimalDoughnutChart: React.FC<MinimalDoughnutChartProps> = ({
   data,
-  colors = ["#3182CE", "#E2E8F0"], // default blue + gray
+  colors = ["#3182CE", "#E2E8F0"],
 }) => {
   const chartData: ChartData<"doughnut"> = {
-    labels: [], // no labels
+    labels: [], 
     datasets: [
       {
         data,
@@ -32,13 +36,17 @@ const MinimalDoughnutChart: React.FC<MinimalDoughnutChartProps> = ({
   };
 
   const options: ChartOptions<"doughnut"> = {
-    cutout: "70%", // Thickness of the ring
+    cutout: "70%", 
     responsive: true,
     plugins: {
       legend: { display: false },
       tooltip: { enabled: false },
+      datalabels: {
+        display: false, 
+      },
     },
   };
+  
 
   return <Doughnut data={chartData} options={options} />;
 };

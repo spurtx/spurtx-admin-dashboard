@@ -48,7 +48,7 @@ const StatusBar: React.FC<ReusableBarChartProps> = ({
         display: false,
       },
       datalabels: {
-        display: false, // Disables data labels
+        display: false, 
       },
     },
     scales: {
