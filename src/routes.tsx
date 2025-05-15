@@ -14,6 +14,10 @@ import Sparks from "./pages/sparks";
 import Subscription from "./pages/subscription";
 import Spot from "./pages/spot";
 import Spur from "./pages/spur";
+import SyncWallet from "./pages/syncWallet";
+import Employees from "./pages/employees";
+import ProductLists from "./pages/products";
+import AccountManagement from "./pages/accountManagement";
 
 const router = createBrowserRouter([
   {
@@ -34,7 +38,11 @@ const router = createBrowserRouter([
           {path: "/sparks", element: <Sparks />},
           {path: "/subscription", element: <Subscription />},
           {path: "/spot", element: <Spot />},
-          {path: "Spur", element: <Spur />}
+          {path: "Spur", element: <Spur />},
+          {path: "/sync-wallet", element: <SyncWallet />},
+          {path: "/employees", element: <Employees />},
+          {path: "/product-lists", element: <ProductLists />},
+           {path: "/account-management", element: <AccountManagement />},
         ],
       },
     ],

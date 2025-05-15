@@ -40,7 +40,7 @@ const sidebarItems = [
   { name: "Sync! Wallet", icon: wallet, path: "/sync-wallet" },
   { name: "Employees", icon: employee, path: "/employees" },
   { name: "Templates", icon: temp, path: "/templates" },
-  { name: "Product Lists", icon: prod, path: "/products" },
+  { name: "Product Lists", icon: prod, path: "/product-lists" },
   { name: "Subscription", icon: subs, path: "/subscription" },
   { name: "Account Management", icon: account, path: "/account-management" },
 ];
