@@ -17,6 +17,10 @@ export interface ApiService {
 
 export type ReqConfig = AxiosRequestConfig;
 
+export type Service = {
+  api: AxiosInstance;
+};
+
 // Paginated response type
 export interface PaginatedResponse<T> {
   data: T[];

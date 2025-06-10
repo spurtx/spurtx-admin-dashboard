@@ -9,13 +9,16 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
+import { ChakraProvider } from "@chakra-ui/react";
 
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <App />
+      <ChakraProvider resetCSS={false}>
+        <App />
+      </ChakraProvider>
     </QueryClientProvider>
   </StrictMode>
 );

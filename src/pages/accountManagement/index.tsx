@@ -18,6 +18,9 @@ const AccountManagement = () => {
             </button>
           </div>
         </div>
+        <div className="flex justify-center mt-7">
+          <button className="!bg-gradient-to-r from-primary to-secondary !text-white py-2 px-2 rounded-md mt-1 font-semibold cursor-pointer disabled:opacity-60">Log Me In</button>
+        </div>
       </CardContainer>
     </main>
   );

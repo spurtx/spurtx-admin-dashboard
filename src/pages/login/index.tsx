@@ -1,11 +1,14 @@
+
+
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import bg from "../../assets/images/svg/bg.svg";
 import Logo from "../../components/logo";
 import { PiEyeSlash, PiEyeLight } from "react-icons/pi";
+import { useAuth } from "../../hooks/auth/useAuth"
 
 // yup schema
 const schema = yup.object().shape({
@@ -20,10 +23,10 @@ const schema = yup.object().shape({
 });
 
 const Login: React.FC = () => {
-  const navigate = useNavigate();
+  const { signInAsync, signInIsLoading } = useAuth(); 
   const [showPassword, setShowPassword] = useState(false);
+  
 
-  // React Hook Form
   const {
     register,
     handleSubmit,
@@ -32,11 +35,27 @@ const Login: React.FC = () => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data: { email: string; password: string }) => {
-    console.log("Login Data:", data);
-    localStorage.setItem("isAuthenticated", "true"); // store auth flag of user
-    navigate("/");
-  };
+  const onSubmit = async (data: { email: string; password: string }) => {
+  try {
+    const encodedData = {
+      email: data.email,
+      password: encodeURIComponent(data.password), // URL encode
+    };
+    console.log("Encoded payload:", encodedData); 
+    await signInAsync(encodedData);
+  } catch (err) {
+    if (err instanceof Error) {
+      console.error("Login failed:", err.message);
+    } else if (typeof err === "object" && err !== null && "response" in err) {
+      
+      const e = err as { response?: { data?: any } };
+      console.error("Login failed:", e.response?.data);
+    } else {
+      console.error("Login failed:", err);
+    }
+  }
+};
+
 
   return (
     <div
@@ -60,7 +79,7 @@ const Login: React.FC = () => {
             <input
               type="email"
               {...register("email")}
-              className={`w-full h-10 border rounded-md focus:outline-none bg-[#F5F5F5] pl-4 ${
+              className={`w-full h-10 border rounded-md focus:outline-none bg-[#F5F5F5] !pl-4 ${
                 errors.email ? "border-red-500" : "border-gray-300"
               }`}
             />
@@ -75,7 +94,7 @@ const Login: React.FC = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 {...register("password")}
-                className={`w-full h-10 border rounded-md focus:outline-none bg-[#F5F5F5] pl-4 pr-10 ${
+                className={`w-full h-10 border rounded-md focus:outline-none bg-[#F5F5F5] !pl-4 pr-10 ${
                   errors.password ? "border-red-500" : "border-gray-300"
                 }`}
               />
@@ -97,9 +116,10 @@ const Login: React.FC = () => {
 
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-[#00A15D] to-[#C16407] text-white py-3 rounded-md mt-1 font-semibold cursor-pointer"
+            className="w-full !bg-gradient-to-r from-primary to-secondary !text-white py-3 rounded-md mt-1 font-semibold cursor-pointer disabled:opacity-60"
+            disabled={signInIsLoading}
           >
-            Sign In
+            {signInIsLoading ? "Signing In..." : "Sign In"}
           </button>
         </form>
       </div>
@@ -108,3 +128,4 @@ const Login: React.FC = () => {
 };
 
 export default Login;
+
