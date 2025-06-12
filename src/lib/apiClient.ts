@@ -25,7 +25,7 @@ apiClient.interceptors.request.use(
       if (config.headers instanceof AxiosHeaders) {
         config.headers.set("Authorization", `Bearer ${token}`);
       } else if (config.headers) {
-        // fallback: convert to AxiosHeaders if it's a plain object
+        // fallback: 
         config.headers = new AxiosHeaders(config.headers);
         config.headers.set("Authorization", `Bearer ${token}`);
       } else {
@@ -39,7 +39,7 @@ apiClient.interceptors.request.use(
   }
 );
 
-// Response interceptor (unchanged)
+// Response interceptor
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error: AxiosError) => {

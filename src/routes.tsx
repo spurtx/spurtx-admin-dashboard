@@ -18,11 +18,12 @@ import SyncWallet from "./pages/syncWallet";
 import Employees from "./pages/employees";
 import ProductLists from "./pages/products";
 import AccountManagement from "./pages/accountManagement";
+import Register from "./pages/register";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <ProtectedRoutes />, // Protect all child routes
+    element: <ProtectedRoutes />, 
     children: [
       {
         path: "/",
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
   },
 ]);
 
