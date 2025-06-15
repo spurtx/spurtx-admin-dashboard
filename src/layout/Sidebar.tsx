@@ -21,28 +21,28 @@ import sync_mile from "../assets/images/svg/sync_mile.svg";
 import arr from "../assets/images/svg/arr-right.svg";
 
 const sidebarItems = [
-  { name: "Dashboard", icon: dash, path: "/" },
+  { name: "Dashboard", icon: dash, path: "/dashboard" },
   {
     name: "Sync",
     icon: sync,
-    path: "/sync",
+    path: "/dashboard/sync", // <-- FIXED
     subItems: [
-      { name: "Projects", path: "/sync/projects", icon: sync_proj },
-      { name: "Milestones", path: "/sync/milestones", icon: sync_mile },
-      { name: "Proposals", path: "/sync/proposals", icon: sync_prop },
-      { name: "Tasks", path: "/sync/tasks", icon: sync_task },
+      { name: "Projects", path: "/dashboard/sync/projects", icon: sync_proj },
+      { name: "Milestones", path: "/dashboard/sync/milestones", icon: sync_mile },
+      { name: "Proposals", path: "/dashboard/sync/proposals", icon: sync_prop },
+      { name: "Tasks", path: "/dashboard/sync/tasks", icon: sync_task },
     ],
   },
-  { name: "Sparks", icon: sparks, path: "/sparks" },
-  { name: "Spur", icon: spur, path: "/spur" },
-  { name: "Spot", icon: spot, path: "/spot" },
-  { name: "Score", icon: score, path: "/score" },
-  { name: "Sync! Wallet", icon: wallet, path: "/sync-wallet" },
-  { name: "Employees", icon: employee, path: "/employees" },
-  { name: "Templates", icon: temp, path: "/templates" },
-  { name: "Product Lists", icon: prod, path: "/product-lists" },
-  { name: "Subscription", icon: subs, path: "/subscription" },
-  { name: "Account Management", icon: account, path: "/account-management" },
+  { name: "Sparks", icon: sparks, path: "/dashboard/sparks" },
+  { name: "Spur", icon: spur, path: "/dashboard/spur" },
+  { name: "Spot", icon: spot, path: "/dashboard/spot" },
+  { name: "Score", icon: score, path: "/dashboard/score" },
+  { name: "Sync! Wallet", icon: wallet, path: "/dashboard/sync-wallet" },
+  { name: "Employees", icon: employee, path: "/dashboard/employees" },
+  { name: "Templates", icon: temp, path: "/dashboard/templates" },
+  { name: "Product Lists", icon: prod, path: "/dashboard/product-lists" },
+  { name: "Subscription", icon: subs, path: "/dashboard/subscription" },
+  { name: "Account Management", icon: account, path: "/dashboard/account-management" },
 ];
 
 const Sidebar: React.FC = () => {

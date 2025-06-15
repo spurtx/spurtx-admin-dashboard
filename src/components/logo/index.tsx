@@ -1,7 +1,7 @@
-import logo from "../../assets/images/top/logo.png"
+import logo from "../../assets/images/svg/nx-logo.svg"
 
 const Logo = () => {
   return <img src={logo} alt="logo" className=""/>
 }
 
-export default Logo
+export default Logo;

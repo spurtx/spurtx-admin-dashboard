@@ -1,5 +1,3 @@
-
-
 import React, { useState } from "react";
 
 import { useForm } from "react-hook-form";
@@ -8,7 +6,7 @@ import * as yup from "yup";
 import bg from "../../assets/images/svg/bg.svg";
 import Logo from "../../components/logo";
 import { PiEyeSlash, PiEyeLight } from "react-icons/pi";
-import { useAuth } from "../../hooks/auth/useAuth"
+import { useAuth } from "../../hooks/auth/useAuth";
 
 // yup schema
 const schema = yup.object().shape({
@@ -23,9 +21,8 @@ const schema = yup.object().shape({
 });
 
 const Login: React.FC = () => {
-  const { signInAsync, signInIsLoading } = useAuth(); 
+  const { signInAsync, signInIsLoading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-  
 
   const {
     register,
@@ -36,26 +33,35 @@ const Login: React.FC = () => {
   });
 
   const onSubmit = async (data: { email: string; password: string }) => {
-  try {
-    const encodedData = {
-      email: data.email,
-      password: encodeURIComponent(data.password), // URL encode
-    };
-    console.log("Encoded payload:", encodedData); 
-    await signInAsync(encodedData);
+    try {
+      // const encodedData = {
+      //   email: data.email,
+      //   password: encodeURIComponent(data.password), // URL encode
+      // };
+      try {
+    console.log("Attempting login with:", data);
+    const response = await signInAsync(data);
+    console.log("Login response:", response); // Add this
   } catch (err) {
-    if (err instanceof Error) {
-      console.error("Login failed:", err.message);
-    } else if (typeof err === "object" && err !== null && "response" in err) {
-      
-      const e = err as { response?: { data?: any } };
-      console.error("Login failed:", e.response?.data);
-    } else {
-      console.error("Login failed:", err);
-    }
+    console.error("Login error:", err);
   }
-};
 
+      // console.log("Login payload:", data);
+      // await signInAsync({
+      //   email: data.email,
+      //   password: data.password, // Send plain password
+      // });
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error("Login failed:", err.message);
+      } else if (typeof err === "object" && err !== null && "response" in err) {
+        const e = err as { response?: { data?: any } };
+        console.error("Login failed:", e.response?.data);
+      } else {
+        console.error("Login failed:", err);
+      }
+    }
+  };
 
   return (
     <div
@@ -128,4 +134,3 @@ const Login: React.FC = () => {
 };
 
 export default Login;
-

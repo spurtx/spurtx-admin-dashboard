@@ -1,12 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
 import { useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router";
-import { useApiClient } from "../useApiClient";
+import { useAuthClient } from "../useAuthClient";
 import authService from "../../services/auth/auth";
 // import { Service } from "../../types/api"; // assuming your service types are defined here
 
 export const useAuth = () => {
-  const api = useApiClient();
+  const api = useAuthClient();
   const Service = authService({ api });
   const toast = useToast();
   const navigate = useNavigate();
@@ -26,21 +26,31 @@ export const useAuth = () => {
     });
   };
 
-  // --- Sign In ---
-  const signInMutation = useMutation({
-    mutationFn: Service.signin,
-    onSuccess: (data) => {
-      const token = data.data?.token;
-      if (token) {
-        localStorage.setItem("token", token);
-        navigate("/dashboard");
-        showToast("Signed in", "You have successfully logged in.", "success");
-      }
-    },
-    onError: (error: Error) => {
-      showToast("Sign in failed", error.message, "error");
-    },
-  });
+const signInMutation = useMutation({
+  mutationFn: Service.signin,
+
+  onSuccess: (response) => {
+   
+    const userData = response?.data?.data;
+
+    console.log("Login response data:", userData);
+
+    const token = userData?.access_token;
+
+    if (token) {
+      localStorage.setItem("token", token);
+    } else {
+      console.warn("No token found in login response.");
+      showToast("Login Failed", "No token received", "error");
+      return;
+    }
+
+    localStorage.setItem("user", JSON.stringify(userData));
+    navigate("/dashboard");
+    showToast("Login Successful", "Welcome back!", "success");
+  },
+});
+
 
   // --- Register Admin ---
   const registerAdminMutation = useMutation({

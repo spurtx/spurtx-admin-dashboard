@@ -19,35 +19,43 @@ import Employees from "./pages/employees";
 import ProductLists from "./pages/products";
 import AccountManagement from "./pages/accountManagement";
 import Register from "./pages/register";
+import { Navigate } from "react-router-dom";
+
 
 const router = createBrowserRouter([
+ 
   {
     path: "/",
-    element: <ProtectedRoutes />, 
+    element: <Navigate to="/dashboard" replace />,
+  },
+ 
+  {
+    path: "/dashboard",
+    element: <ProtectedRoutes />,
     children: [
       {
-        path: "/",
         element: <AdminLayout />,
         children: [
           { index: true, element: <Dashboard /> },
-          { path: "/sync", element: <Sync /> },
-          { path: "/referrals", element: <Referrals /> },
-          {path: "/sync/projects", element: <Projects />},
-          {path: "/sync/milestones", element: <Milestones />},
-          {path: "/sync/proposals", element: <Proposals />},
-          {path: "/sync/tasks", element: <Tasks />},
-          {path: "/sparks", element: <Sparks />},
-          {path: "/subscription", element: <Subscription />},
-          {path: "/spot", element: <Spot />},
-          {path: "Spur", element: <Spur />},
-          {path: "/sync-wallet", element: <SyncWallet />},
-          {path: "/employees", element: <Employees />},
-          {path: "/product-lists", element: <ProductLists />},
-           {path: "/account-management", element: <AccountManagement />},
+          { path: "sync", element: <Sync /> },
+          { path: "referrals", element: <Referrals /> },
+          { path: "sync/projects", element: <Projects /> },
+          { path: "sync/milestones", element: <Milestones /> },
+          { path: "sync/proposals", element: <Proposals /> },
+          { path: "sync/tasks", element: <Tasks /> },
+          { path: "sparks", element: <Sparks /> },
+          { path: "subscription", element: <Subscription /> },
+          { path: "spot", element: <Spot /> },
+          { path: "spur", element: <Spur /> },
+          { path: "sync-wallet", element: <SyncWallet /> },
+          { path: "employees", element: <Employees /> },
+          { path: "product-lists", element: <ProductLists /> },
+          { path: "account-management", element: <AccountManagement /> },
         ],
       },
     ],
   },
+
   {
     path: "/login",
     element: <Login />,
@@ -55,6 +63,11 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <Register />,
+  },
+ 
+  {
+    path: "*",
+    element: <Navigate to="/dashboard" replace />,
   },
 ]);
 

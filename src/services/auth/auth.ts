@@ -4,7 +4,8 @@ function authService({ api }: Service) {
   const prefix = "/admin";
 
   const signin = (data: { email: string; password: string }) => {
-    return api.post(`${prefix}/sign-in-admin`, data);
+    // return api.post(`${prefix}/sign-in-admin`, data);
+    return api.post(`${prefix}/login`, data);
   };
 
   const registerAdmin = (data: any) => {
