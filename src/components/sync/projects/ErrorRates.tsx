@@ -3,7 +3,7 @@ import MinimalDoughnutChart from '../../graphs/MinimalDoughnutChart';
 
 const ErrorRates = () => {
   return (
-    <CardContainer className='h-[400px] flex flex-col justify-between'>
+    <CardContainer className='h-[450px] flex flex-col justify-between'>
         <p className="bg-gradient-to-r from-[#00A15D] to-[#C16407] bg-clip-text text-transparent">Projects Error Rates</p>
         <div className="h-[180px] w-[120px] flex justify-center mx-auto items-center ">
         <MinimalDoughnutChart data={[85, 15]} colors={["#00A15D", "#BF6408"]}/>

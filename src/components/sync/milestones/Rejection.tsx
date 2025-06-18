@@ -3,7 +3,7 @@ import DonutChart from "../../graphs/DonutChart";
 
 const Rejection = () => {
   return (
-    <CardContainer className="h-[320px]">
+    <CardContainer className="h-[320px] xl:h-[360px]">
         <h1 className="bg-gradient-to-r from-[#00A15D] to-[#C16407] bg-clip-text text-transparent inline-block font-semibold">Milestone Rejection/Acceptance Rates</h1>
         <div className="flex justify-center items-center gap-20 mt-20">
       <div className="w-30 h-30 flex flex-col justify-center items-center">

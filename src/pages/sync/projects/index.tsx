@@ -1,6 +1,6 @@
 
 
-import { useProjectMetrics } from '../../../hooks/sync/projects/useProjectMetrics.ts';
+import { useProjectsData } from '../../../hooks/sync/projects/useProjectsData.ts';
 import ProjectCard from '../../../components/sync/projects/ProjectCard';
 import ProjectStatus from '../../../components/sync/projects/ProjectStatus';
 import ErrorRates from '../../../components/sync/projects/ErrorRates';
@@ -8,7 +8,7 @@ import ProjectsTable from '../../../components/sync/projects/ProjectsTable';
 import Skeleton from '../../../components/sync/projects/ProjectCardSkeleton.tsx';
 
 const Projects = () => {
-  const { data: totalProjects, isLoading, isError } = useProjectMetrics();
+  const { data: response, isLoading, isError } = useProjectsData();
 
   if (isLoading) {
     return (
@@ -23,7 +23,8 @@ const Projects = () => {
   if (isError) {
     return <div>Error loading project metrics</div>;
   }
-
+const totalProjects = response?.data?.meta?.totalItems ?? 0;
+  const projects = response?.data?.data ?? [];
   return (
     <main>
       <h1 className="font-semibold">Projects</h1>
@@ -31,7 +32,7 @@ const Projects = () => {
       {/* Metrics Cards */}
       <div className="w-full grid grid-cols-5 gap-5 bg-white p-5 rounded-[7px] shadow-lg mt-3">
       <ProjectCard 
-  projectCount={totalProjects?.toLocaleString() || '0'} 
+   projectCount={totalProjects.toLocaleString()}  
   type="Total Projects Counted"
 />
         <ProjectCard 

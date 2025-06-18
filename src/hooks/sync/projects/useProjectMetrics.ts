@@ -6,11 +6,19 @@ export const useProjectMetrics = () => {
   const { api } = useApi();
   const service = createProjectService({ api });
 
+  const token = localStorage.getItem("token");
+
   return useQuery<number, Error>({
     queryKey: ['project-metrics'],
     queryFn: async () => {
-      const response = await service.getFilteredProjects();
-      return response.meta.totalItems; // ✅ only return the count
+      // const response = await service.getFilteredProjects();
+      const response = await service.getFilteredProjects({}, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      console.log("full data response", response);
+      return response.meta.totalItems; 
     },
     meta: {
       onSuccess: (count: number) => console.log('Total projects:', count),
@@ -18,3 +26,6 @@ export const useProjectMetrics = () => {
     }
   });
 };
+
+
+

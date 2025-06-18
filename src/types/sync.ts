@@ -15,11 +15,21 @@ export enum UserRole {
   }
   
   // ----- Project Types -----
-  export enum ProjectStatus {
-    COMPLETED = "COMPLETED",
-    DRAFT = "DRAFT",
-    IN_PROGRESS = "IN_PROGRESS", // Fixed typo: "IN PROGRESS"
-  }
+  // export enum ProjectStatus {
+  //   COMPLETED = "COMPLETED",
+  //   DRAFT = "DRAFT",
+  //   IN_PROGRESS = "IN_PROGRESS", // Fixed typo: "IN PROGRESS"
+  // }
+export enum ProjectStatus {
+  CLOSED = "CLOSED",
+  DRAFT = "DRAFT",
+  IN_PROGRESS = "IN PROGRESS",
+}
+  export interface ProjectsByStatus {
+  [ProjectStatus.DRAFT]?: number;
+  [ProjectStatus.IN_PROGRESS]?: number;
+  [ProjectStatus.CLOSED]?: number;
+}
   
   export enum ProjectInvitationStatus {
     ACCEPTED_INVITE = "ACCEPTED-INVITE",
@@ -56,7 +66,7 @@ export enum UserRole {
     id: string;
     projectId: string;
     summary: string;
-    status: ProjectProposalStatus;
+    status: ProjectStatus;
     submittedBy: User;
     submittedAt: string;
   }
