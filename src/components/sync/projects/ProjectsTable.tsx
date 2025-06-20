@@ -10,7 +10,7 @@ import Avatars from "../../heroUI/Avatars";
 import { useProjectsData } from "../../../hooks/sync/projects/useProjectsData";
 import { ProjectStatus } from "../../../types/sync";
 import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
-import { ProjectStatusLabels } from "../../../constants/projectstatus";
+import { ProjectStatusLabels } from "../../../constants/syncstatuslabels";
 import { exportToCSV } from "../../../utils/exportToCSV";
 import formatDated from "../../../utils/formatDate";
 

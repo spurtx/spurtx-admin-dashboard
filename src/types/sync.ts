@@ -1,3 +1,5 @@
+;
+
 
 
 // ----- User Types -----
@@ -79,6 +81,21 @@ export enum ProjectStatus {
     description: string;
     dueDate: string;
     completed: boolean;
+  }
+
+  export enum MilestoneStatus {
+    UNDER_REVIEW = "UNDER REVIEW",
+    COMPLETED = "COMPLETED",
+    NOT_ASSIGNED = "NOT ASSIGNED",
+    REJECTED = "REJECTED",
+    NOT_STARTED = "NOT STARTED",
+    IN_PROGRESS = "IN PROGRESS"
+  }
+
+  export enum ProposalStatus {
+    PENDING = "PENDING",
+    ACCEPTED = "ACCEPTED",
+    REJECTED = "REJECTED",
   }
   
   // ----- Task Types -----

@@ -56,9 +56,9 @@ export type ReqConfig = AxiosRequestConfig;
 
 // Generic paginated response
 // types/api.ts
-export interface PaginatedResponse {
+export interface PaginatedResponse<T = any> {
   data: {
-    data: Project[];  // Note the nested data array
+    data: T[];  // Note the nested data array
     links: {
       current: string;
       next?: string;
