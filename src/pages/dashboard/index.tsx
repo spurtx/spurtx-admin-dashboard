@@ -17,7 +17,7 @@ const Dashboard: React.FC = () => {
     <div>
       <div className="flex justify-between items-center">
         <h1 className="font-semibold">Dashboard</h1>
-       <Link to="/referrals"><p className="flex gap-1 items-center bg-gradient-to-r cursor-pointer from-[#00A15D] to-[#C16407] bg-clip-text text-transparent">
+       <Link to="/dashboard/referrals"><p className="flex gap-1 items-center bg-gradient-to-r cursor-pointer from-[#00A15D] to-[#C16407] bg-clip-text text-transparent">
           Referals{" "}
           <ArrowRight />
         </p>
