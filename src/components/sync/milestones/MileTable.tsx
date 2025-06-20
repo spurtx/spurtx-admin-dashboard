@@ -1,27 +1,16 @@
-
-
 import { useState, useEffect } from "react";
 import CardContainer from "../../ui/CardContainer";
-import { IoSearchOutline } from "react-icons/io5";
-import { MdSort, MdOutlineCloudUpload } from "react-icons/md";
-import { RiDeleteBin6Line } from "react-icons/ri";
-
-import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 import { useMilestonesData } from "../../../hooks/sync/projects/useMilestoneData";
 import { exportToCSV } from "../../../utils/exportToCSV";
 import formatDated from "../../../utils/formatDate";
 import Skeleton from "../../sync/projects/ProjectCardSkeleton";
 import { MilestoneStatusLabels } from "../../../constants/syncstatuslabels";
 import { MilestoneStatus } from "../../../types/sync";
-
-// Define milestone status labels similar to ProjectStatusLabels
-// const MilestoneStatusLabels = {
-//   'NOT ASSIGNED': 'Not Assigned',
-//   'IN_PROGRESS': 'In Progress',
-//   'COMPLETED': 'Completed',
-//   'OVERDUE': 'Overdue'
-// };
-
+import { SearchInput } from "../../common/SearchInput";
+import { SortButton } from "../../common/SortButton";
+import { ExportButton } from "../../common/ExportButton";
+import { Pagination } from "../../common/Pagination";
+import { RiDeleteBin6Line } from "react-icons/ri";
 const MileTable = () => {
   const [page, setPage] = useState(1);
   const [limit] = useState(20);
@@ -64,7 +53,7 @@ const MileTable = () => {
     return dateString ? new Date(dateString).toLocaleDateString() : 'N/A';
   };
 
- const getStatusStyles = (status: MilestoneStatus) => {
+  const getStatusStyles = (status: MilestoneStatus) => {
      switch (status) {
        case "COMPLETED":
          return "bg-green-100 text-green-500";
@@ -113,36 +102,20 @@ const MileTable = () => {
 
   return (
     <CardContainer>
-      {/* Search & Buttons */}
+      {/* Search & Buttons - Now using reusable components */}
       <div className="flex justify-between mb-4">
-        <div className="flex items-center gap-3 border border-gray-400 rounded-[5px] w-[300px] py-1 px-4">
-          <IoSearchOutline className="text-gray-400 mt-1" />
-          <input
-            placeholder="Search milestones, projects..."
-            className="text-gray-600 outline-none bg-transparent w-full"
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-          />
-        </div>
+        <SearchInput
+          placeholder="Search milestones, projects..."
+          value={searchInput}
+          onChange={setSearchInput}
+        />
         <div className="flex gap-3">
-          <button 
-            className="flex gap-2 border items-center px-3 border-gray-300 text-gray-400 rounded-[3px]"
-            onClick={() => requestSort('title')}
-          >
-            <MdSort />
-            Sort Table
-          </button>
-          <button 
-            className="flex gap-2 border cursor-pointer items-center px-3 border-gray-300 text-gray-400 rounded-[3px]" 
-            onClick={handleExport}
-          >
-            <MdOutlineCloudUpload />
-            Export
-          </button>
+          <SortButton onClick={() => requestSort('title')} />
+          <ExportButton onClick={handleExport} />
         </div>
       </div>
 
-      {/* Table */}
+      {/* Table - Keeping the existing table implementation */}
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead className="bg-primary text-white text-[13px] text-start font-normal">
@@ -184,27 +157,18 @@ const MileTable = () => {
           <tbody>
             {milestones.map((milestone) => (
               <tr key={milestone.id} className="border-b">
-                {/* Milestone Title */}
                 <td className="py-2 px-3 text-gray-600 text-[13px] font-semibold">
                   {milestone.title}
                 </td>
-
-                {/* Project */}
                 <td className="py-2 px-5 text-gray-600 text-[13px] font-semibold">
                   {milestone.project?.name || 'N/A'}
                 </td>
-
-                {/* Due Date */}
                 <td className="py-2 px-5 text-gray-600 text-[13px] font-semibold">
                   {formatDate(milestone.dueAt)}
                 </td>
-
-                {/* Created At */}
                 <td className="py-2 px-5 text-gray-600 text-[13px] font-semibold">
                   {formatDate(milestone.createdAt)}
                 </td>
-
-                {/* Status */}
                 <td className="py-2 px-5 text-[7px] font-semibold">
                   <div
                     className={`flex justify-center uppercase px-3 py-1.5 text-[10px] flex-row rounded-[23px] text-sm whitespace-nowrap ${getStatusStyles(
@@ -214,10 +178,6 @@ const MileTable = () => {
                     {MilestoneStatusLabels[milestone.status as keyof typeof MilestoneStatusLabels] || milestone.status}
                   </div>
                 </td>
-
-               
-
-                {/* Delete */}
                 <td className="py-2 px-5 text-center">
                   <RiDeleteBin6Line className="text-red-500 cursor-pointer" />
                 </td>
@@ -227,31 +187,14 @@ const MileTable = () => {
         </table>
       </div>
 
-      {/* Pagination */}
-      <div className="flex justify-between items-center mt-4">
-        <div>
-          Showing page {page} of {totalPages}
-        </div>
-        <div className="flex gap-5 rounded-[13px] border border-gray-300 shadow-md px-1 py-1">
-          <button
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            disabled={page === 1}
-            className="cursor-pointer"
-          >
-            <IoIosArrowBack />
-          </button>
-          <button
-            onClick={() => setPage((p) => p + 1)}
-            disabled={page >= totalPages}
-            className="cursor-pointer"
-          >
-            <IoIosArrowForward />
-          </button>
-        </div>
-      </div>
+      {/* Pagination - */}
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
     </CardContainer>
   );
 };
 
 export default MileTable;
-

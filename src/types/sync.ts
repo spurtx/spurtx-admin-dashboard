@@ -95,7 +95,7 @@ export enum ProjectStatus {
   export enum ProposalStatus {
     PENDING = "PENDING",
     ACCEPTED = "ACCEPTED",
-    REJECTED = "REJECTED",
+    DECLINED = "DECLINED",
   }
   
   // ----- Task Types -----
