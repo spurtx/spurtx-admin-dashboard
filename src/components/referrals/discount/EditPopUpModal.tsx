@@ -1,3 +1,6 @@
+
+
+import { useState } from 'react';
 import {
   Modal,
   ModalContent,
@@ -5,55 +8,80 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  useDisclosure,
 } from "@heroui/react";
 
-const EditPopUpModal = () => {
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
-
-  return (
-    <div className="bg-white z-20 w-80 p-4 border border-gray-300 rounded-[12px]">
-        <p>Pay For referral</p>
-        <span className="text-red-400 font-semibold text-[12px]">(Use this after transferring funds)</span>
-        <Button onPress={onOpen}>Edit</Button>
-        <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">Edit</ModalHeader>
-              <ModalBody>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pulvinar risus non
-                  risus hendrerit venenatis. Pellentesque sit amet hendrerit risus, sed porttitor
-                  quam.
-                </p>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pulvinar risus non
-                  risus hendrerit venenatis. Pellentesque sit amet hendrerit risus, sed porttitor
-                  quam.
-                </p>
-                <p>
-                  Magna exercitation reprehenderit magna aute tempor cupidatat consequat elit dolor
-                  adipisicing. Mollit dolor eiusmod sunt ex incididunt cillum quis. Velit duis sit
-                  officia eiusmod Lorem aliqua enim laboris do dolor eiusmod. Et mollit incididunt
-                  nisi consectetur esse laborum eiusmod pariatur proident Lorem eiusmod et. Culpa
-                  deserunt nostrud ad veniam.
-                </p>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Close
-                </Button>
-                <Button color="primary" onPress={onClose}>
-                  Action
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-    </div>
-  )
+interface Referral {
+  id: string;
+  label: string;
+  couponId: string | null;
 }
 
-export default EditPopUpModal
+interface EditPopUpModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  referral: Referral;
+  onUpdate: (label: string, couponId: string) => void;
+position?: { top: number; left: number };
+}
+
+const EditPopUpModal = ({ isOpen, onClose, referral, onUpdate, position = { top: 0, left: 0 } }: EditPopUpModalProps) => {
+  const [label, setLabel] = useState(referral.label);
+  const [selectedCoupon, setSelectedCoupon] = useState(referral.couponId || "");
+
+  const handleSubmit = () => {
+    onUpdate(label, selectedCoupon);
+  };
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} className="z-50 top-10 right-10 bg-red-500">
+      <ModalContent style={{
+        position: 'absolute',
+        top: `${position.top}px`,
+        left: `${position.left}px`,
+        transform: 'translateY(10px)'}}>
+        <ModalHeader className="font-bold">Edit Referral</ModalHeader>
+        <ModalBody>
+          <div className="space-y-4">
+            <div className="p-3 border border-green-500 rounded-[13px]">
+              <input 
+                className="focus:outline-none focus:ring-0 border-none w-full"
+                value={label}
+                onChange={(e) => setLabel(e.target.value)}
+              />
+            </div>
+            
+            <div>
+              <p className="text-sm mb-2">Referrer Discount</p>
+              <select
+                className="w-full text-[12px] py-2 px-2 border border-blue-300 rounded-[2px] focus:outline-blue-500 focus:ring-0"
+                value={selectedCoupon}
+                onChange={(e) => setSelectedCoupon(e.target.value)}
+              >
+                <option value="">No Discount</option>
+                <option value="mufa">Mufa Group 20% Discount 2024</option>
+                <option value="spurt">Spurt! 50% Off</option>
+                <option value="womenwork">Womenwork Network 10% Off 2024</option>
+                <option value="bujeti">Bujeti 5% Discount 2024</option>
+                <option value="sync">Sync 20% Discount</option>
+                <option value="gta">Girl Tech Africa 20% Discount</option>
+                <option value="latitude59">Latitude59 20% Discount 2023</option>
+                <option value="sidebrief">Sidebrief Partnership 2023</option>
+              </select>
+            </div>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="danger" variant="light" onPress={onClose}>
+            Cancel
+          </Button>
+          <Button color="primary" onPress={handleSubmit}>
+            Save Changes
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+};
+
+export default EditPopUpModal;
+
