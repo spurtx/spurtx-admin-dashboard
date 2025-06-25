@@ -3,7 +3,7 @@ import { toolkitClient } from "../../lib/toolkitClient";
 import { AxiosRequestConfig } from "axios";
 
 // Define types within the service file
-export interface Spark {
+export interface Spot {
   id: string;
   name: string;
   description: string;
@@ -20,7 +20,7 @@ export interface Spark {
   };
 }
 
-interface SparkFilters {
+interface SpotFilters {
   page?: number;
   limit?: number;
   status?: string;
@@ -29,8 +29,8 @@ interface SparkFilters {
   sortBy?: string;
 }
 
-export interface PaginatedSparkResponse {
-  data: Spark[];
+export interface PaginatedSpotResponse {
+  data: Spot[];
   links: {
     current: string;
     next?: string;
@@ -47,14 +47,14 @@ export interface PaginatedSparkResponse {
 
 const ENDPOINT = "/admin/spark";
 
-const SparkService = {
+const SpotService = {
   /**
    * Get paginated sparks for table display
    */
-  async getSparksForTable(
-    filters: SparkFilters = {},
+  async getSpotForTable(
+    filters: SpotFilters = {},
     config?: AxiosRequestConfig
-  ): Promise<PaginatedSparkResponse> {
+  ): Promise<PaginatedSpotResponse> {
     const params = {
       page: filters.page || 1,
       limit: filters.limit || 25,  // Default to 25 items per page for tables
@@ -75,7 +75,7 @@ const SparkService = {
   /**
    * Get all sparks without pagination (if needed for dropdowns)
    */
-  async getAllSparks(config?: AxiosRequestConfig): Promise<Spark[]> {
+  async getAllSpot(config?: AxiosRequestConfig): Promise<Spot[]> {
     const response = await toolkitClient.get(ENDPOINT, {
       ...config,
       params: { limit: 1000 }  // Adjust based on expected maximum
@@ -84,4 +84,4 @@ const SparkService = {
   }
 };
 
-export default SparkService;
+export default SpotService

@@ -16,22 +16,32 @@ export const toolkitClient: AxiosInstance = axios.create({
   }),
 });
 
-// Request interceptor with improved token handling
+// Update request interceptor
 toolkitClient.interceptors.request.use(
-  (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
+  (config: InternalAxiosRequestConfig) => {
     const token = localStorage.getItem("token");
+    const headers = config.headers ? new AxiosHeaders(config.headers) : new AxiosHeaders();
+
     if (token) {
-      // Simplify header handling using AxiosHeaders
-      config.headers = config.headers || new AxiosHeaders();
-      config.headers.set("Authorization", `Bearer ${token}`, true);
+      headers.set("X-Access-Token", token); // ✅ correct header
     }
-    return config;
+
+    const apiKey = import.meta.env.VITE_API_KEY;
+    if (apiKey) {
+      headers.set("api-key", apiKey);
+    }
+
+    return {
+      ...config,
+      headers,
+    };
   },
   (error: AxiosError) => {
     console.error("Request Error:", error.message);
     return Promise.reject(error);
   }
 );
+
 
 // Response interceptor with enhanced error handling
 toolkitClient.interceptors.response.use(

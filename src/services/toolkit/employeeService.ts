@@ -1,14 +1,17 @@
-// src/services/sparkService.ts
 import { toolkitClient } from "../../lib/toolkitClient";
 import { AxiosRequestConfig } from "axios";
 
-// Define types within the service file
-export interface Spark {
+// Types
+export interface Employee {
   id: string;
   name: string;
   description: string;
   powerLevel: number;
-  type?: string;           // Add this
+  departments: number;       // Add this
+  emoCount: number;          // Add this
+  additions: number;         // Add this
+  rejections: number;
+  type?: string;
   department?: string;
   status: "active" | "inactive" | "pending";
   createdAt: string;
@@ -20,17 +23,17 @@ export interface Spark {
   };
 }
 
-interface SparkFilters {
+interface EmployeeFilters {
   page?: number;
-  limit?: number;
+  take?: number; // align with backend param
   status?: string;
   minPowerLevel?: number;
   search?: string;
   sortBy?: string;
 }
 
-export interface PaginatedSparkResponse {
-  data: Spark[];
+export interface PaginatedEmployeeResponse {
+  data: Employee[];
   links: {
     current: string;
     next?: string;
@@ -45,21 +48,20 @@ export interface PaginatedSparkResponse {
   };
 }
 
-const ENDPOINT = "/admin/spark";
+const ENDPOINT = "/admin/companies";
 
-const SparkService = {
-  /**
-   * Get paginated sparks for table display
-   */
-  async getSparksForTable(
-    filters: SparkFilters = {},
+const EmployeeService = {
+  async getEmployeesForTable(
+    filters: EmployeeFilters = {},
     config?: AxiosRequestConfig
-  ): Promise<PaginatedSparkResponse> {
+  ): Promise<PaginatedEmployeeResponse> {
     const params = {
       page: filters.page || 1,
-      limit: filters.limit || 25,  // Default to 25 items per page for tables
-      ...(filters.status && { 'filter.status': `$eq:${filters.status}` }),
-      ...(filters.minPowerLevel && { 'filter.powerLevel': `$gte:${filters.minPowerLevel}` }),
+      take: filters.take || 25, // changed to `take` for backend compatibility
+      ...(filters.status && { "filter.status": `$eq:${filters.status}` }),
+      ...(filters.minPowerLevel && {
+        "filter.powerLevel": `$gte:${filters.minPowerLevel}`,
+      }),
       ...(filters.search && { search: filters.search }),
       ...(filters.sortBy && { sortBy: filters.sortBy }),
     };
@@ -72,16 +74,13 @@ const SparkService = {
     return response.data;
   },
 
-  /**
-   * Get all sparks without pagination (if needed for dropdowns)
-   */
-  async getAllSparks(config?: AxiosRequestConfig): Promise<Spark[]> {
+  async getAllEmployees(config?: AxiosRequestConfig): Promise<Employee[]> {
     const response = await toolkitClient.get(ENDPOINT, {
       ...config,
-      params: { limit: 1000 }  // Adjust based on expected maximum
+      params: { take: 1000 },
     });
-    return response.data.data;  // Assuming same response structure
-  }
+    return response.data.data;
+  },
 };
 
-export default SparkService;
+export default EmployeeService;

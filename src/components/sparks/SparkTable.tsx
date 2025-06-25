@@ -1,125 +1,211 @@
+
+
+
+import { useState, useEffect } from "react";
 import CardContainer from "../ui/CardContainer";
-import { IoSearchOutline } from "react-icons/io5";
+import { SearchInput } from "../common/SearchInput";
+import { ExportButton } from "../common/ExportButton";
+import { SortButton } from "../common/SortButton";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { MdSort, MdOutlineCloudUpload } from "react-icons/md";
+import { Pagination } from "../common/Pagination";
+import { useSparkData } from "../../hooks/toolkit/useSparkData";
+import { exportToCSV } from "../../utils/exportToCSV";
+import formatDated from "../../utils/formatDate";
+import Skeleton from "../sync/projects/ProjectCardSkeleton";
+// import { SparkStatusLabels } from "../../constants/toolkitStatusLabels";
+// import { SparkStatus } from "../../types/toolkit";
 import ArrowRight from "../ui/ArrowRight";
 
 const SparkTable = () => {
+  const [page, setPage] = useState(1);
+  const [limit] = useState(20);
+  const [searchInput, setSearchInput] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [sortConfig, setSortConfig] = useState<{
+    key: string;
+    direction: "asc" | "desc";
+  }>({ key: "createdAt", direction: "desc" });
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchInput);
+      setPage(1);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  const {
+    data: response,
+    isLoading,
+    isError,
+  } = useSparkData({
+    page,
+    limit,
+    search: debouncedSearch,
+    sortBy: `${sortConfig.key}:${sortConfig.direction.toUpperCase()}`,
+  });
+
+  const sparks = response?.data || [];
+  const totalPages = response?.meta?.totalPages || 1;
+
+  const requestSort = (key: string) => {
+    let direction: "asc" | "desc" = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const formatDate = (dateString: string) => {
+    return dateString ? new Date(dateString).toLocaleDateString() : "N/A";
+  };
+
+  const getStatusStyles = (status: any) => {
+    switch (status) {
+      case "active":
+        return "bg-green-100 text-green-500";
+      case "inactive":
+        return "bg-red-100 text-red-500";
+      case "pending":
+        return "bg-yellow-100 text-yellow-500";
+      default:
+        return "bg-gray-100 text-gray-500";
+    }
+  };
+
+  const handleExport = () => {
+    const exportData = sparks.map((spark, index) => ({
+      "S/N": index + 1,
+      "Spark Title": spark.name,
+      Company: spark.owner.name,
+      Date: formatDated(spark.createdAt),
+      "Spark Type": spark.type || "N/A",
+      "Department of Recipient": spark.department || "N/A",
+      // Status: SparkStatusLabels[spark.status] || spark.status,
+    }));
+
+    exportToCSV(exportData, "Sparks_List");
+  };
+
+  if (isLoading) {
+    return (
+      <CardContainer>
+        <div className="space-y-4">
+          <Skeleton />
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Skeleton key={i} />
+          ))}
+        </div>
+      </CardContainer>
+    );
+  }
+
+  if (isError) return <div>Error loading sparks</div>;
+
   return (
     <CardContainer>
-      {/* Top Controls */}
       <div className="flex justify-between mb-4">
-        <div className="flex items-center gap-3 border border-gray-400 rounded-[5px] w-[300px] py-1 px-4">
-          <IoSearchOutline className="text-gray-400 mt-1" />
-          <input
-            placeholder="search"
-            className="text-gray-600 outline-none bg-transparent w-full"
-          />
-        </div>
+        <SearchInput
+          placeholder="Search sparks, companies..."
+          value={searchInput}
+          onChange={setSearchInput}
+        />
         <div className="flex gap-3">
-          <button className="flex gap-2 border items-center px-3 border-gray-300 text-gray-400 rounded-[3px]">
-            <MdSort />
-            Sort Table
-          </button>
-          <button className="flex gap-2 border items-center px-3 border-gray-300 text-gray-400 rounded-[3px]">
-            <MdOutlineCloudUpload />
-            Export
-          </button>
+          <SortButton onClick={() => requestSort("name")} />
+          <ExportButton onClick={handleExport} />
         </div>
       </div>
 
       {/* Table */}
-      <div>
+      <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead className="bg-gradient-to-r from-[#00A15D] to-[#C16407] text-white text-[13px] text-start font-normal">
             <tr>
               <th className="py-3 text-start px-3">S/N</th>
-              <th className="px-5 text-start">Spark Title</th>
-              <th className="px-5 text-start">Company</th>
-              <th className="px-5 text-start">Date</th>
-              <th className="px-5 text-start">Spark Type</th>
-              <th className="px-5 text-start">Department of Recipient</th>
+              <th
+                className="px-5 text-start cursor-pointer"
+                onClick={() => requestSort("name")}
+              >
+                Spark Title{" "}
+                {sortConfig.key === "name" &&
+                  (sortConfig.direction === "asc" ? "↑" : "↓")}
+              </th>
+              <th
+                className="px-5 text-start cursor-pointer"
+                onClick={() => requestSort("owner.name")}
+              >
+                Company{" "}
+                {sortConfig.key === "owner.name" &&
+                  (sortConfig.direction === "asc" ? "↑" : "↓")}
+              </th>
+              <th
+                className="px-5 text-start cursor-pointer"
+                onClick={() => requestSort("createdAt")}
+              >
+                Date{" "}
+                {sortConfig.key === "createdAt" &&
+                  (sortConfig.direction === "asc" ? "↑" : "↓")}
+              </th>
+              <th
+                className="px-5 text-start cursor-pointer"
+                onClick={() => requestSort("type")}
+              >
+                Spark Type{" "}
+                {sortConfig.key === "type" &&
+                  (sortConfig.direction === "asc" ? "↑" : "↓")}
+              </th>
+              <th
+                className="px-5 text-start cursor-pointer"
+                onClick={() => requestSort("department")}
+              >
+                Department{" "}
+                {sortConfig.key === "department" &&
+                  (sortConfig.direction === "asc" ? "↑" : "↓")}
+              </th>
+              <th
+                className="px-10 text-start cursor-pointer"
+                onClick={() => requestSort("status")}
+              >
+                Status{" "}
+                {sortConfig.key === "status" &&
+                  (sortConfig.direction === "asc" ? "↑" : "↓")}
+              </th>
               <th className="px-5"></th>
               <th className="px-5"></th>
             </tr>
           </thead>
           <tbody>
-            {[
-              {
-                id: 1,
-                title: "Varga Boglarka",
-                company: "FutureGen Inc.",
-                date: "2025-12-12",
-                type: "Day trip",
-                department: "Marketing",
-              },
-              {
-                id: 2,
-                title: "Kende Lili",
-                company: "BrightPath Co.",
-                date: "2025-12-12",
-                type: "Off the course",
-                department: "Sales",
-              },
-              {
-                id: 3,
-                title: "Nagy Zsolt",
-                company: "TechNova",
-                date: "2025-12-12",
-                type: "Tailored to you",
-                department: "Engineering",
-              },
-              {
-                id: 4,
-                title: "Luka Simon",
-                company: "EcoWare Ltd.",
-                date: "2025-12-12",
-                type: "Day trip",
-                department: "HR",
-              },
-              {
-                id: 5,
-                title: "Kovács Emma",
-                company: "WaveSphere",
-                date: "2025-12-12",
-                type: "Off the course",
-                department: "Operations",
-              },
-              {
-                id: 6,
-                title: "Tóth Ádám",
-                company: "NimbleTech",
-                date: "2025-12-12",
-                type: "Tailored to you",
-                department: "Finance",
-              },
-              {
-                id: 7,
-                title: "Mészáros Anna",
-                company: "QuantumLeap",
-                date: "2025-12-12",
-                type: "Day trip",
-                department: "Customer Support",
-              },
-            ].map((item, index) => (
-              <tr key={item.id}>
+            {sparks.map((spark, index) => (
+              <tr key={spark.id} className="border-b">
                 <td className="p-2 text-gray-500 text-[13px] font-semibold">
                   {index + 1}
                 </td>
                 <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">
-                  {item.title}
+                  {spark.name}
                 </td>
                 <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">
-                  {item.company}
+                  {spark.owner?.name || "N/A"}
                 </td>
                 <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">
-                  {item.date}
+                  {formatDate(spark.createdAt)}
                 </td>
                 <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">
-                  {item.type}
+                  {spark.type || "N/A"}
                 </td>
                 <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">
-                  {item.department}
+                  {spark.department || "N/A"}
+                </td>
+                <td className="py-2 px-5 text-[13px] font-semibold">
+                  <div
+                    className={`${getStatusStyles(
+                      spark.status
+                    )} text-sm w-30 flex justify-center rounded-[17px] px-3 py-1.5`}
+                  >
+                    <span>
+                      {spark.status }
+                    </span>
+                  </div>
                 </td>
                 <td className="py-2 px-5 text-center">
                   <RiDeleteBin6Line className="text-red-500 cursor-pointer" />
@@ -132,6 +218,13 @@ const SparkTable = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Pagination */}
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
     </CardContainer>
   );
 };
