@@ -1,5 +1,7 @@
 import { ReqConfig, Service } from "../../types/api"
 
+
+
 function authService({ api }: Service) {
   const prefix = "/admin";
 

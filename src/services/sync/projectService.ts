@@ -1,6 +1,6 @@
 
 import { ApiService, ReqConfig, PaginatedResponse, ProjectFilters } from "../../types/api";
-import { Project, ProjectMetrics, ProjectsByStatus } from "../../types/sync";
+import { ProjectMetrics, ProjectsByStatus } from "../../types/sync";
 
 const ENDPOINTS = {
   FILTERED_PROJECTS: "/analytics/filter-project",

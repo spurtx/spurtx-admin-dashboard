@@ -1,181 +1,6 @@
 
 
-// import { useState } from "react";
-// import CardContainer from "../ui/CardContainer";
-// import { IoSearchOutline } from "react-icons/io5";
-// import { RiDeleteBin6Line } from "react-icons/ri";
-// import { MdOutlineCloudUpload } from "react-icons/md";
-// import GradientDots from "../ui/GradientDots";
-// import { useWalletData } from "../../hooks/sync/projects/useWalletData";
-// import { exportToCSV } from "../../utils/exportToCSV";
-
-// const WalletTable = () => {
-//   const [searchInput, setSearchInput] = useState("");
-  
-//   const {
-//     data: allWallets = [],
-//     isLoading,
-//     isError,
-//     error,
-//   } = useWalletData();
-
-//   // Filter wallets based on search input
-//   const filteredWallets = allWallets.filter(wallet => {
-//     if (!searchInput) return true;
-//     const searchLower = searchInput.toLowerCase();
-    
-//     return (
-//       (wallet.user?.firstName?.toLowerCase().includes(searchLower)) ||
-//       (wallet.user?.lastName?.toLowerCase().includes(searchLower)) ||
-//       (wallet.user?.email?.toLowerCase().includes(searchLower)) ||
-//       (wallet.amountPaid.toString().includes(searchInput)) ||
-//       (wallet.plan?.toLowerCase().includes(searchLower)) ||
-//       (wallet.transactionRef?.toLowerCase().includes(searchLower))
-//     );
-//   });
-
-//   const formatDate = (dateString: string) => {
-//     return dateString ? new Date(dateString).toLocaleDateString() : "N/A";
-//   };
-
-//   const getStatus = (wallet: any) => {
-//     if (wallet.isCancelled) return "Cancelled";
-//     return wallet.isActive ? "Active" : "Inactive";
-//   };
-
-//   const handleExport = () => {
-//     const exportData = filteredWallets.map((wallet) => ({
-//       "S/N": wallet.id,
-//       "Name": `${wallet.user?.firstName || ""} ${wallet.user?.lastName || ""}`.trim() || "N/A",
-//       "Email": wallet.user?.email || "N/A",
-//       "Date of Transaction": formatDate(wallet.createdAt),
-//       "Amount Paid": wallet.amountPaid ? `$${wallet.amountPaid}` : "N/A",
-//       "Duration": wallet.duration || "N/A",
-//       "Expiration Date": formatDate(wallet.expiryDate),
-//       "Plan": wallet.plan || "N/A",
-//       "Status": getStatus(wallet),
-//       "Auto Renewal": wallet.autoRenewal ? "Yes" : "No",
-//     }));
-
-//     exportToCSV(exportData, "Wallet_Transactions");
-//   };
-
-//   if (isLoading) {
-//     return (
-//       <CardContainer>
-//         <div>Loading wallet transactions...</div>
-//       </CardContainer>
-//     );
-//   }
-
-//   if (isError) {
-//     console.error("Wallet API Error:", error);
-//     return (
-//       <div className="text-red-500 p-4">
-//         Error loading wallet transactions: {error.message}
-//         {error.response?.data?.message && ` - ${error.response.data.message}`}
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <CardContainer>
-//       {/* Top Controls */}
-//       <div className="flex justify-between mb-4">
-//         <div className="flex items-center gap-3 border border-gray-400 rounded-[5px] w-[300px] py-1 px-4">
-//           <IoSearchOutline className="text-gray-400 mt-1" />
-//           <input
-//             placeholder="Search wallet transactions..."
-//             className="text-gray-600 outline-none bg-transparent w-full"
-//             value={searchInput}
-//             onChange={(e) => setSearchInput(e.target.value)}
-//           />
-//         </div>
-//         <div className="flex gap-3">
-//           <button 
-//             className="flex gap-2 border items-center px-3 border-gray-300 text-gray-400 rounded-[3px]"
-//             onClick={handleExport}
-//           >
-//             <MdOutlineCloudUpload />
-//             Export
-//           </button>
-//         </div>
-//       </div>
-
-//       {/* Table */}
-//       <div className="overflow-x-auto">
-//         <table className="w-full border-collapse">
-//           <thead className="bg-gradient-to-r from-[#00A15D] to-[#C16407] text-white text-[13px] font-normal">
-//             <tr>
-//               <th className="py-3 px-3 text-left">S/N</th>
-//               <th className="px-5 text-left">Name</th>
-//               <th className="px-5 text-left">Email</th>
-//               <th className="px-5 text-left">Transaction Date</th>
-//               <th className="px-5 text-left">Amount Paid</th>
-//               <th className="px-5 text-left">Duration</th>
-//               <th className="px-5 text-left">Expiration Date</th>
-//               <th className="px-5 text-left">Plan</th>
-//               <th className="px-5 text-left">Status</th>
-//               <th className="px-5"></th>
-//               <th className="px-5"></th>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {filteredWallets.map((wallet, index) => (
-//               <tr key={wallet.id} className="border-b">
-//                 <td className="p-2 text-gray-500 text-[13px] font-semibold">
-//                   {String(index + 1).padStart(2, "0")}
-//                 </td>
-//                 <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">
-//                   {wallet.user?.firstName || "N/A"} {wallet.user?.lastName || ""}
-//                 </td>
-//                 <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">
-//                   {wallet.user?.email || "N/A"}
-//                 </td>
-//                 <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">
-//                   {formatDate(wallet.createdAt)}
-//                 </td>
-//                 <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">
-//                   ${wallet.amountPaid}
-//                 </td>
-//                 <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">
-//                   {wallet.duration}
-//                 </td>
-//                 <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">
-//                   {formatDate(wallet.expiryDate)}
-//                 </td>
-//                 <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">
-//                   {wallet.plan}
-//                 </td>
-//                 <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">
-//                   <span className={`px-2 py-1 rounded-md ${
-//                     getStatus(wallet) === "Active" 
-//                       ? "bg-green-100 text-green-800" 
-//                       : getStatus(wallet) === "Cancelled" 
-//                         ? "bg-red-100 text-red-800" 
-//                         : "bg-yellow-100 text-yellow-800"
-//                   }`}>
-//                     {getStatus(wallet)}
-//                   </span>
-//                 </td>
-//                 <td className="py-2 px-5 text-center">
-//                   <RiDeleteBin6Line className="text-red-500 cursor-pointer" />
-//                 </td>
-//                 <td className="py-2 px-5 text-center">
-//                   <GradientDots />
-//                 </td>
-//               </tr>
-//             ))}
-//           </tbody>
-//         </table>
-//       </div>
-//     </CardContainer>
-//   );
-// };
-
-// export default WalletTable;
-
-
+import { isAxiosError } from "axios";
 import { useState } from "react";
 import CardContainer from "../ui/CardContainer";
 import { IoSearchOutline } from "react-icons/io5";
@@ -185,6 +10,7 @@ import { exportToCSV } from "../../utils/exportToCSV";
 
 const WalletTable = () => {
   const [searchInput, setSearchInput] = useState("");
+ 
   
   const {
     data: transfers = [],
@@ -254,14 +80,23 @@ const WalletTable = () => {
           <h3 className="font-bold text-lg">Error Loading Data</h3>
           <p className="mt-2">Message: {error.message}</p>
           
-          {error.response?.data && (
+          {/* {error.response?.data && (
             <div className="mt-3 bg-red-100 p-3 rounded">
               <p className="font-medium">Server Response:</p>
               <pre className="text-xs mt-1 overflow-auto max-h-40">
                 {JSON.stringify(error.response.data, null, 2)}
               </pre>
             </div>
-          )}
+          )} */}
+
+           {isAxiosError(error) && error.response?.data && (
+          <div className="mt-3 bg-red-100 p-3 rounded">
+            <p className="font-medium">Server Response:</p>
+            <pre className="text-xs mt-1 overflow-auto max-h-40">
+              {JSON.stringify(error.response.data, null, 2)}
+            </pre>
+          </div>
+        )}
           
           <div className="mt-4 flex justify-between">
             <button 

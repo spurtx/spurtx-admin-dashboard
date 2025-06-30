@@ -25,7 +25,7 @@ const Projects = () => {
     return <div>Error loading project metrics</div>;
   }
 const totalProjects = response?.data?.meta?.totalItems ?? 0;
-  const projects = response?.data?.data ?? [];
+  // const projects = response?.data?.data ?? [];
   return (
     <main>
      <SectionHeading>Projects</SectionHeading>
@@ -37,7 +37,7 @@ const totalProjects = response?.data?.meta?.totalItems ?? 0;
   type="Total Projects Counted"
 />
         <ProjectCard 
-          projectCount={'1,024'} // Rough estimate / mock
+          projectCount={'134'} // Rough estimate / mock
           type="Total Invitations Sent"
         />
         <ProjectCard 

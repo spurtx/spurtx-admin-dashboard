@@ -1,4 +1,4 @@
-import { PaginatedSparkResponse, Spark } from './../../services/toolkit/sparkService';
+import { PaginatedSparkResponse} from './../../services/toolkit/sparkService';
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import SparkService from "../../services/toolkit/sparkService"; // Import Spark types
 import { useToolkitClient } from "../useToolkitClient";
