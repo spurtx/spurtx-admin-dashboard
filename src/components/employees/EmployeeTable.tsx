@@ -1,3 +1,5 @@
+
+
 import { useState, useEffect } from "react";
 import CardContainer from "../ui/CardContainer";
 import { SearchInput } from "../common/SearchInput";
@@ -41,9 +43,18 @@ const EmployeeTable = () => {
     sortBy: `${sortConfig.key}:${sortConfig.direction.toUpperCase()}`,
   });
 
-  const organizations = response?.data?.data || [];
-  const totalPages = response?.meta?.totalPages || 1;
-  // const totalItems = response?.meta?.totalItems || 0;
+  // Access companies array from the nested response
+  const organizations = response?.data?.companies || [];
+  // Access pagination metadata
+  const pagination = response?.data?.pagination || {
+    total: 0,
+    page: 1,
+    pages: 1,
+    limit: 20
+  };
+  
+  const totalPages = pagination.pages || 1;
+  // const totalItems = pagination.total || 0;
 
   const requestSort = (key: string) => {
     let direction: "asc" | "desc" = "asc";
@@ -54,14 +65,19 @@ const EmployeeTable = () => {
   };
 
   const handleExport = () => {
+    // Add safeguard in case organizations is not an array
+    if (!Array.isArray(organizations)) {
+      console.error("Organizations is not an array:", organizations);
+      return;
+    }
+
     const exportData = organizations.map((org, index) => ({
-      "S/N": index + 1,
-      Organization: org.name,
-      "No. of Depts": org.department || "N/A",
-      "No. of Emo": org.emoCount || 0,
-      Additions: org.additions || 0,
-      Rejections: org.rejections || 0,
-      Status: org.status,
+      "S/N": (page - 1) * take + index + 1,
+      Organization: org.companyName,
+      "Employee Count": org.employeeCount || 0,
+      "Employee Size": org.employeeSize || "N/A",
+      Industry: org.industry || "N/A",
+      "Subscription Type": org.subscriptionType || "N/A",
       "Created At": formatDated(org.createdAt),
     }));
 
@@ -92,7 +108,7 @@ const EmployeeTable = () => {
           onChange={setSearchInput}
         />
         <div className="flex gap-3">
-          <SortButton onClick={() => requestSort("name")} />
+          <SortButton onClick={() => requestSort("companyName")} />
           <ExportButton onClick={handleExport} />
         </div>
       </div>
@@ -105,42 +121,42 @@ const EmployeeTable = () => {
               <th className="py-3 text-start px-3">S/N</th>
               <th
                 className="px-5 text-start cursor-pointer"
-                onClick={() => requestSort("name")}
+                onClick={() => requestSort("companyName")}
               >
                 Organization{" "}
-                {sortConfig.key === "name" &&
+                {sortConfig.key === "companyName" &&
                   (sortConfig.direction === "asc" ? "↑" : "↓")}
               </th>
               <th
                 className="px-5 text-start cursor-pointer"
-                onClick={() => requestSort("departments")}
+                onClick={() => requestSort("employeeCount")}
               >
-                No. of Depts{" "}
-                {sortConfig.key === "departments" &&
+                Employees{" "}
+                {sortConfig.key === "employeeCount" &&
                   (sortConfig.direction === "asc" ? "↑" : "↓")}
               </th>
               <th
                 className="px-5 text-start cursor-pointer"
-                onClick={() => requestSort("emoCount")}
+                onClick={() => requestSort("employeeSize")}
               >
-                No. of Emo{" "}
-                {sortConfig.key === "emoCount" &&
+                Employee Size{" "}
+                {sortConfig.key === "employeeSize" &&
                   (sortConfig.direction === "asc" ? "↑" : "↓")}
               </th>
               <th
                 className="px-5 text-start cursor-pointer"
-                onClick={() => requestSort("additions")}
+                onClick={() => requestSort("industry")}
               >
-                Additions{" "}
-                {sortConfig.key === "additions" &&
+                Industry{" "}
+                {sortConfig.key === "industry" &&
                   (sortConfig.direction === "asc" ? "↑" : "↓")}
               </th>
               <th
                 className="px-5 text-start cursor-pointer"
-                onClick={() => requestSort("rejections")}
+                onClick={() => requestSort("subscriptionType")}
               >
-                Rejections{" "}
-                {sortConfig.key === "rejections" &&
+                Subscription{" "}
+                {sortConfig.key === "subscriptionType" &&
                   (sortConfig.direction === "asc" ? "↑" : "↓")}
               </th>
               <th className="px-5"></th>
@@ -154,19 +170,19 @@ const EmployeeTable = () => {
                   {(page - 1) * take + index + 1}
                 </td>
                 <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">
-                  {org.name}
+                  {org.companyName}
                 </td>
                 <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">
-                  {org.departments || "N/A"}
+                  {org.employeeCount || 0}
                 </td>
                 <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">
-                  {org.emoCount}
+                  {org.employeeSize || "N/A"}
                 </td>
                 <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">
-                  {org.additions}
+                  {org.industry || "N/A"}
                 </td>
                 <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">
-                  {org.rejections}
+                  {org.subscriptionType || "N/A"}
                 </td>
                 <td className="py-2 px-5 text-center">
                   <RiDeleteBin6Line className="text-red-500 cursor-pointer" />

@@ -8,8 +8,8 @@ const Spot = () => {
     <main>
       <h1 className="font-semibold">Job Applications</h1>
       <div className="w-full grid grid-cols-5 gap-5 bg-white p-5 rounded-[7px] shadow-lg mt-3">
-        <SpotCard spotCount="600,000" type="Total Hired" />
-        <SpotCard spotCount="24 Days" type="Avg Hiring time" />
+        <SpotCard spotCount="605" type="Total Hired" />
+        <SpotCard spotCount="28 Days" type="Avg Hiring time" />
         <SpotCard
           spotCount="20"
           rate="/per month"

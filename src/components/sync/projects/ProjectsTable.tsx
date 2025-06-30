@@ -13,6 +13,7 @@ import { Pagination } from "../../common/Pagination";
 import { ProjectStatusLabels } from "../../../constants/syncstatuslabels";
 import { exportToCSV } from "../../../utils/exportToCSV";
 import formatDated from "../../../utils/formatDate";
+import LoadingSpinner from "../../ui/LoadingSpinner";
 
 const ProjectsTable = () => {
   const [page, setPage] = useState(1);
@@ -88,7 +89,7 @@ const ProjectsTable = () => {
     exportToCSV(exportData, "Projects_List");
   };
 
-  if (isLoading) return <div>Loading projects...</div>;
+  if (isLoading) return <div><LoadingSpinner /></div>;
   if (isError) return <div>Error loading projects</div>;
 
   return (

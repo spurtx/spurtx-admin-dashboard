@@ -6,6 +6,7 @@ import ProjectStatus from '../../../components/sync/projects/ProjectStatus';
 import ErrorRates from '../../../components/sync/projects/ErrorRates';
 import ProjectsTable from '../../../components/sync/projects/ProjectsTable';
 import Skeleton from '../../../components/sync/projects/ProjectCardSkeleton.tsx';
+import SectionHeading from '../../../components/ui/SectionHeading.tsx';
 
 const Projects = () => {
   const { data: response, isLoading, isError } = useProjectsData();
@@ -27,7 +28,7 @@ const totalProjects = response?.data?.meta?.totalItems ?? 0;
   const projects = response?.data?.data ?? [];
   return (
     <main>
-      <h1 className="font-semibold">Projects</h1>
+     <SectionHeading>Projects</SectionHeading>
 
       {/* Metrics Cards */}
       <div className="w-full grid grid-cols-5 gap-5 bg-white p-5 rounded-[7px] shadow-lg mt-3">

@@ -1,124 +1,221 @@
+
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import CardContainer from "../ui/CardContainer";
-import { IoSearchOutline } from "react-icons/io5";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import { MdSort } from "react-icons/md";
-import ArrowRight from "../ui/ArrowRight";
+import { SearchInput } from "../common/SearchInput";
+import { ExportButton } from "../common/ExportButton";
+import { SortButton } from "../common/SortButton";
+import { Pagination } from "../common/Pagination";
+import { useJobSeekersData } from "../../hooks/toolkit/useJobSeekersData";
+import { exportToCSV } from "../../utils/exportToCSV";
+import formatDated from "../../utils/formatDate";
+import Skeleton from "../sync/projects/ProjectCardSkeleton";
+
+import GradientDots from "../ui/GradientDots";
 
 const SpotTable = () => {
-  const mockData = [
-    {
-      id: 1,
-      name: "John Doe",
-      email: "john.doe@example.com",
-      date: "2025-12-12",
-      job: "Software Engineer",
-      company: "TechNova Inc.",
-      status: "Accepted",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      email: "jane.smith@brightpath.com",
-      date: "2025-11-15",
-      job: "Product Manager",
-      company: "BrightPath Co.",
-      status: "Rejected",
-    },
-    {
-      id: 3,
-      name: "Alex Johnson",
-      email: "alex.j@futuregen.com",
-      date: "2025-10-30",
-      job: "Data Analyst",
-      company: "FutureGen Inc.",
-      status: "Accepted",
-    },
-    {
-      id: 4,
-      name: "Emily Davis",
-      email: "emily.d@ecoware.com",
-      date: "2025-09-20",
-      job: "HR Specialist",
-      company: "EcoWare Ltd.",
-      status: "Rejected",
-    },
-    {
-      id: 5,
-      name: "Chris Brown",
-      email: "chris.b@wavesphere.io",
-      date: "2025-08-05",
-      job: "Software Engineer",
-      company: "WaveSphere",
-      status: "Accepted",
-    },
-  ];
+  const navigate = useNavigate();
+  const [page, setPage] = useState(1);
+  const [limit] = useState(30); // 30 items per page
+  const [searchInput, setSearchInput] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [sortConfig, setSortConfig] = useState<{
+    key: string;
+    direction: "asc" | "desc";
+  }>({ key: "createdAt", direction: "desc" });
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchInput);
+      setPage(1);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  const { 
+    data: response, 
+    isLoading, 
+    isError 
+  } = useJobSeekersData({
+    page,
+    limit,
+    search: debouncedSearch,
+    sortBy: `${sortConfig.key}:${sortConfig.direction.toUpperCase()}`,
+  });
+
+  // Correct data extraction
+  const jobSeekers = response?.data?.jobSeekers || [];
+  const totalPages = response?.data?.pageMetaDto?.pageCount || 1;
+
+  const requestSort = (key: string) => {
+    let direction: "asc" | "desc" = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const formatDate = (dateString: string) => {
+    return dateString ? new Date(dateString).toLocaleDateString() : "N/A";
+  };
+
+  const handleExport = () => {
+    const exportData = jobSeekers.map((seeker, index) => ({
+      "S/N": index + 1,
+      Name: seeker.name,
+      Email: seeker.email,
+      "Joined Date": formatDated(seeker.createdAt),
+      "Phone Number": seeker.phoneNumber,
+      Location: seeker.location,
+      Gender: seeker.gender || "N/A",
+    }));
+
+    exportToCSV(exportData, "Job_Seekers_List");
+  };
+
+  const toggleMenu = (id: string) => {
+    setActiveMenu(activeMenu === id ? null : id);
+  };
+
+  const viewApplications = (userId: string) => {
+    navigate(`/dashboard/spot/job-seekers/${userId}/applications`);
+  };
+
+  if (isLoading) {
+    return (
+      <CardContainer>
+        <div className="space-y-4">
+          <Skeleton />
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Skeleton key={i} />
+          ))}
+        </div>
+      </CardContainer>
+    );
+  }
+
+  if (isError) return (
+    <CardContainer>
+      <div className="flex justify-center py-10 text-red-500">
+        Error loading job seekers data
+      </div>
+    </CardContainer>
+  );
 
   return (
     <CardContainer>
-      {/* Top Controls */}
       <div className="flex justify-between mb-4">
-        <div className="flex items-center gap-3 border border-gray-400 rounded-[5px] w-[300px] py-1 px-4">
-          <IoSearchOutline className="text-gray-400 mt-1" />
-          <input
-            placeholder="Search"
-            className="text-gray-600 outline-none bg-transparent w-full"
-          />
-        </div>
+        <SearchInput
+          placeholder="Search job seekers, locations, phone..."
+          value={searchInput}
+          onChange={setSearchInput}
+        />
         <div className="flex gap-3">
-          <button className="flex gap-2 border items-center px-3 border-gray-300 text-gray-400 rounded-[3px]">
-            <MdSort />
-            Sort Table
-          </button>
+          <SortButton onClick={() => requestSort("name")} />
+          <ExportButton onClick={handleExport} />
         </div>
       </div>
 
-      {/* Table */}
-      <div>
+      <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead className="bg-gradient-to-r from-[#00A15D] to-[#C16407] text-white text-[13px] text-start font-normal">
             <tr>
               <th className="py-3 text-start px-3">S/N</th>
-              <th className="px-5 text-start">Name</th>
-              <th className="px-5 text-start">Email</th>
-              <th className="px-5 text-start">Date</th>
-              <th className="px-5 text-start">Job</th>
-              <th className="px-5 text-start">Company</th>
-              <th className="px-5 text-start">Status</th>
-              <th className="px-5"></th>
-              <th className="px-5"></th>
+              <th
+                className="px-5 text-start cursor-pointer"
+                onClick={() => requestSort("name")}
+              >
+                Name{" "}
+                {sortConfig.key === "name" &&
+                  (sortConfig.direction === "asc" ? "↑" : "↓")}
+              </th>
+              <th
+                className="px-5 text-start cursor-pointer"
+                onClick={() => requestSort("email")}
+              >
+                Email{" "}
+                {sortConfig.key === "email" &&
+                  (sortConfig.direction === "asc" ? "↑" : "↓")}
+              </th>
+              <th
+                className="px-5 text-start cursor-pointer"
+                onClick={() => requestSort("createdAt")}
+              >
+                Joined Date{" "}
+                {sortConfig.key === "createdAt" &&
+                  (sortConfig.direction === "asc" ? "↑" : "↓")}
+              </th>
+              <th
+                className="px-5 text-start cursor-pointer"
+                onClick={() => requestSort("phoneNumber")}
+              >
+                Phone{" "}
+                {sortConfig.key === "phoneNumber" &&
+                  (sortConfig.direction === "asc" ? "↑" : "↓")}
+              </th>
+              <th
+                className="px-5 text-start cursor-pointer"
+                onClick={() => requestSort("location")}
+              >
+                Location{" "}
+                {sortConfig.key === "location" &&
+                  (sortConfig.direction === "asc" ? "↑" : "↓")}
+              </th>
+              <th className="px-5">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {mockData.map((item, index) => (
-              <tr key={item.id}>
-                <td className="p-2 text-gray-500 text-[13px] font-semibold">{index + 1}</td>
-                <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">{item.name}</td>
-                <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">{item.email}</td>
-                <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">{item.date}</td>
-                <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">{item.job}</td>
-                <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">{item.company}</td>
-                <td className="py-2 px-5 text-[13px] font-semibold">
-                  <span
-                    className={`px-3 py-[2px] rounded-full text-xs font-medium ${
-                      item.status === "Accepted"
-                        ? "text-green-700 bg-green-100"
-                        : "text-red-700 bg-red-100"
-                    }`}
+            {jobSeekers.map((seeker, index) => (
+              <tr key={seeker.id} className="border-b hover:bg-gray-50">
+                <td className="p-2 text-gray-500 text-[13px] font-semibold">
+                  {index + 1}
+                </td>
+                <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">
+                  {seeker.name}
+                </td>
+                <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">
+                  {seeker.email}
+                </td>
+                <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">
+                  {formatDate(seeker.createdAt)}
+                </td>
+                <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">
+                  {seeker.phoneNumber}
+                </td>
+                <td className="py-2 px-5 text-gray-500 text-[13px] font-semibold">
+                  {seeker.location || "N/A"}
+                </td>
+                <td className="py-2 px-5 relative">
+                  <button 
+                    onClick={() => toggleMenu(seeker.id)}
+                    className="p-1 rounded hover:bg-gray-200"
                   >
-                    {item.status}
-                  </span>
-                </td>
-                <td className="py-2 px-5 text-center">
-                  <RiDeleteBin6Line className="text-red-500 cursor-pointer" />
-                </td>
-                <td>
-                  <ArrowRight />
+                    <GradientDots />
+                  </button>
+                  
+                  {activeMenu === seeker.id && (
+                    <div className="absolute right-5 mt-1 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+                      <button
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => viewApplications(seeker.userId)}
+                      >
+                        View Job Applications
+                      </button>
+                    </div>
+                  )}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
     </CardContainer>
   );
 };

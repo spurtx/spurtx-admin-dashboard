@@ -5,7 +5,7 @@ import GeoBarChart from './GeoBarChart'
 
 const AcceptedCand = () => {
   return (
-    <CardContainer className='h-[340px]'>
+    <CardContainer className='h-[370px]'>
         <GradientText className='mb-4'>Accepted candidates geolocation</GradientText>
         <div className='flex gap-5'>
             <div className='h-400px'>

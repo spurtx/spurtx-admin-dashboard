@@ -3,18 +3,17 @@ import TotalMilestones from '../../../components/sync/milestones/TotalMilestones
 import MilestoneStatus from '../../../components/sync/milestones/MilestoneStatus'
 import Rejection from '../../../components/sync/milestones/Rejection'
 import MileTable from '../../../components/sync/milestones/MileTable'
-import { useMilestonesData } from '../../../hooks/sync/projects/useMilestoneData'
-import Skeleton from '../../../components/sync/projects/ProjectCardSkeleton.tsx';
+import SectionHeading from '../../../components/ui/SectionHeading'
+// import { useMilestonesData } from '../../../hooks/sync/projects/useMilestoneData'
+// import Skeleton from '../../../components/sync/projects/ProjectCardSkeleton.tsx';
 
 const Milestones = () => {
-  const {data: response, isLoading, isError} = useMilestonesData();
+  // const {data: response, isLoading, isError} = useMilestonesData();
 
-  if(isLoading){
-    
-  }
+  
   return (
     <main>
-      <h1 className="font-semibold">Milestones</h1>
+      <SectionHeading>Milestones</SectionHeading>
       <div>
         <TotalMilestones />
       </div>

@@ -6,7 +6,7 @@ import StatusBar from "../graphs/StatusBar";
 
 const JobList = () => {
   return (
-    <CardContainer className="h-[340px]">
+    <CardContainer className="h-[370px]">
       <div className="flex items-center justify-between">
         <GradientText className="">Job listing posted</GradientText>
         <div className="flex gap-3 items-center">

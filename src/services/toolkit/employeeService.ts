@@ -4,22 +4,44 @@ import { AxiosRequestConfig } from "axios";
 // Types
 export interface Employee {
   id: string;
-  name: string;
-  description: string;
-  powerLevel: number;
-  departments: number;       // Add this
-  emoCount: number;          // Add this
-  additions: number;         // Add this
-  rejections: number;
-  type?: string;
-  department?: string;
-  status: "active" | "inactive" | "pending";
+  companyName: string;
+  address: string | null;
+  bio: string | null;
+  email: string;
+  employeeCount: number;
+  employeeSize: string;
+  industry: string;
+  logo: string | null;
+  services: Array<{
+    active: boolean;
+    createdAt: string;
+    id: string;
+    interval: string;
+    name: string;
+    nextSubscriptionAmount: number | null;
+    subscriptionEnd: string | null;
+    subscriptionId: string | null;
+    trialExpires: string;
+    updatedAt: string;
+  }>;
+  subdomain: string;
+  subscriptionType: string;
+  website: string | null;
   createdAt: string;
   updatedAt: string;
-  owner: {
-    id: string;
-    name: string;
-    email: string;
+}
+
+export interface PaginatedEmployeeResponse {
+  status: string;
+  message: string;
+  data: {
+    companies: Employee[];
+    pagination: {
+      total: number;
+      page: number;
+      pages: number;
+      limit: number;
+    };
   };
 }
 
@@ -32,21 +54,21 @@ interface EmployeeFilters {
   sortBy?: string;
 }
 
-export interface PaginatedEmployeeResponse {
-  data: Employee[];
-  links: {
-    current: string;
-    next?: string;
-    last?: string;
-  };
-  meta: {
-    currentPage: number;
-    itemsPerPage: number;
-    sortBy: string[];
-    totalItems: number;
-    totalPages: number;
-  };
-}
+// export interface PaginatedEmployeeResponse {
+//   data: Employee[];
+//   links: {
+//     current: string;
+//     next?: string;
+//     last?: string;
+//   };
+//   meta: {
+//     currentPage: number;
+//     itemsPerPage: number;
+//     sortBy: string[];
+//     totalItems: number;
+//     totalPages: number;
+//   };
+// }
 
 const ENDPOINT = "/admin/companies";
 

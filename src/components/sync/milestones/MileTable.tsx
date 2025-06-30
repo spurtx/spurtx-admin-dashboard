@@ -11,6 +11,7 @@ import { SortButton } from "../../common/SortButton";
 import { ExportButton } from "../../common/ExportButton";
 import { Pagination } from "../../common/Pagination";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import LoadingSpinner from "../../ui/LoadingSpinner";
 const MileTable = () => {
   const [page, setPage] = useState(1);
   const [limit] = useState(20);
@@ -97,7 +98,7 @@ const MileTable = () => {
       </CardContainer>
     );
   }
-
+if (isLoading) return <div><LoadingSpinner /></div>
   if (isError) return <div>Error loading milestones</div>;
 
   return (

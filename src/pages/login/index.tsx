@@ -7,6 +7,7 @@ import bg from "../../assets/images/svg/bg.svg";
 import Logo from "../../components/logo";
 import { PiEyeSlash, PiEyeLight } from "react-icons/pi";
 import { useAuth } from "../../hooks/auth/useAuth";
+import WhiteSpinner from "../../components/ui/WhiteSpinner";
 
 // yup schema
 const schema = yup.object().shape({
@@ -125,7 +126,7 @@ const Login: React.FC = () => {
             className="w-full !bg-gradient-to-r from-primary to-secondary !text-white py-3 rounded-md mt-1 font-semibold cursor-pointer disabled:opacity-60"
             disabled={signInIsLoading}
           >
-            {signInIsLoading ? "Signing In..." : "Sign In"}
+            {signInIsLoading ? <WhiteSpinner /> : "Sign In"}
           </button>
         </form>
       </div>
