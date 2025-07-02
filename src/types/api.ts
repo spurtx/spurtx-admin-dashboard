@@ -55,3 +55,17 @@ export interface ProjectFilters {
   search?: string;
   sortBy?: string;
 }
+
+export interface Referral {
+  id: string;
+  label: string;
+  frequency: number;
+  code: string;
+  pageVisit: number;
+  couponId: string | null;
+  signUps?: number;
+}
+
+export interface ReferralResponse {
+  data: Referral[];
+}

@@ -33,7 +33,7 @@ const EditPopUpModal = ({ isOpen, onClose, referral, onUpdate, position = { top:
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} className="z-50 top-10 right-10 bg-red-500">
+    <Modal isOpen={isOpen} onClose={onClose} className="z-50 p-2 top-10 left-[40%] rounded-md  bg-gray-100">
       <ModalContent style={{
         position: 'absolute',
         top: `${position.top}px`,
@@ -41,7 +41,7 @@ const EditPopUpModal = ({ isOpen, onClose, referral, onUpdate, position = { top:
         transform: 'translateY(10px)'}}>
         <ModalHeader className="font-bold">Edit Referral</ModalHeader>
         <ModalBody>
-          <div className="space-y-4">
+          <div className="space-y-4  p-2">
             <div className="p-3 border border-green-500 rounded-[13px]">
               <input 
                 className="focus:outline-none focus:ring-0 border-none w-full"
