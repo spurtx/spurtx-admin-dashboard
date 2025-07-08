@@ -1,6 +1,8 @@
 import SectionHeading from "../../components/ui/SectionHeading";
 import surveyIcon from "../../assets/images/svg/survey-icon.svg";
 import CardContainer from "../../components/ui/CardContainer";
+import SurveySection from "../../components/templates/surveyTemplates/SurveySection";
+import AppraisalSection from "../../components/templates/surveyTemplates/AppraisalSection";
 
 const Templates = () => {
   const templateIcons = Array(5).fill(surveyIcon);
@@ -17,51 +19,10 @@ const Templates = () => {
           Create+
         </button>
       </div>
-
-      {/* Survey Templates Section */}
-      <CardContainer>
-        <h2 className="text-xl font-semibold mb-4">Survey Templates</h2>
-        <div className="grid grid-cols-5 gap-4">
-          {templateIcons.map((icon, index) => (
-            <img
-              key={`survey-${index}`}
-              src={icon}
-              alt="Survey Template Icon"
-              className="w-60 h-60"
-            />
-          ))}
-        </div>
-      </CardContainer>
-
-      {/* Appraisal Templates Section */}
-      <CardContainer>
-        <h2 className="text-xl font-semibold mb-4">Appraisal Templates</h2>
-        <div className="grid grid-cols-5 gap-4">
-          {templateIcons.map((icon, index) => (
-            <img
-              key={`appraisal-${index}`}
-              src={icon}
-              alt="Appraisal Template Icon"
-              className="w-60 h-60"
-            />
-          ))}
-        </div>
-      </CardContainer>
-
-      {/* Job Listing Templates Section */}
-      <CardContainer>
-        <h2 className="text-xl font-semibold mb-4">Job Listing Templates</h2>
-        <div className="grid grid-cols-5 gap-4">
-          {templateIcons.map((icon, index) => (
-            <img
-              key={`job-${index}`}
-              src={icon}
-              alt="Job Listing Template Icon"
-              className="w-60 h-60"
-            />
-          ))}
-        </div>
-      </CardContainer>
+      <div className="w-full space-y-7">
+        <SurveySection />
+        <AppraisalSection />
+      </div>
     </main>
   );
 };

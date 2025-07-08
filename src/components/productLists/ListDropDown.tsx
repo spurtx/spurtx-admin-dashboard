@@ -1,18 +1,29 @@
+
+
 import { useState } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import { RiArrowRightSLine } from "react-icons/ri";
-import { BiEditAlt } from "react-icons/bi";
+import { FaTimes } from "react-icons/fa";
+
+interface ListItem {
+  id: string;
+  name: string;
+}
 
 const ListDropDown = ({
   name,
   className,
-  details = [],
-  buttonText = "Add Skill",
+  items = [],
+  buttonText = "Add New",
+  onAdd,
+  onDelete,
 }: {
   name: string;
   className?: string;
-  details?: string[];
+  items?: ListItem[];
   buttonText?: string;
+  onAdd: () => void;
+  onDelete: (id: string) => void;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -32,18 +43,26 @@ const ListDropDown = ({
 
       {isOpen && (
         <div className="bg-white">
-          {details.map((detail, idx) => (
+          {items.map((item) => (
             <div
-              key={idx}
+              key={item.id}
               className="flex justify-between items-center px-4 py-2 border-b gap-1 border-t last:border-none"
             >
-              <p className="text-gray-700 text-sm">{detail}</p>
-              <BiEditAlt className="text-gray-500 cursor-pointer" />
+              <p className="text-gray-700 text-sm">{item.name}</p>
+              <button 
+                onClick={() => onDelete(item.id)}
+                className="text-red-500 hover:text-red-700 cursor-pointer"
+              >
+                <FaTimes />
+              </button>
             </div>
           ))}
 
           <div className="py-4">
-            <button className="w-30 text-white font-semibold py-2 rounded-md bg-gradient-to-r from-primary to-secondary">
+            <button 
+              onClick={onAdd}
+              className="w-30 text-white font-semibold py-2 rounded-md bg-gradient-to-r from-primary to-secondary"
+            >
               {buttonText}
             </button>
           </div>

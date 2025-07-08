@@ -17,7 +17,7 @@ export type SurveyTemplate = {
   // Add other fields here
 };
 
-export type SurveyTemplateResponse = {
+export type AppraisalTemplateResponse = {
   data: SurveyTemplate[];
   total: number;
   page: number;
@@ -26,22 +26,22 @@ export type SurveyTemplateResponse = {
 
 const prefix = "/spur";
 
-const surveyTemplateService = {
-  // ✅ Create a new survey template
-  createSurveyTemplate: async (data: unknown, reqConfig?: ReqConfig) => {
+const appraisalTemplatesService = {
+  // Create a new survey template
+  createAppraisalTemplate: async (data: unknown, reqConfig?: ReqConfig) => {
     const response = await toolkitClient.post(
-      `${prefix}/survey/template`,
+      `${prefix}/appraisal/template`,
       data,
       reqConfig
     );
     return response.data;
   },
 
-  // ✅ Get survey templates (returns just .data, not AxiosResponse)
-  getSurveysTemplates: async (
+  // Get survey templates (returns just .data, not AxiosResponse)
+  getAppraisalTemplates: async (
     params: SearchParamsType,
     reqConfig?: ReqConfig
-  ): Promise<SurveyTemplateResponse> => {
+  ): Promise<AppraisalTemplateResponse> => {
     const { page, take, searchQuery } = params;
 
     const queryParams = new URLSearchParams();
@@ -50,21 +50,21 @@ const surveyTemplateService = {
     if (searchQuery) queryParams.append("searchQuery", searchQuery);
 
     const response = await toolkitClient.get(
-      `${prefix}/survey/admin/template?${queryParams.toString()}`,
+      `${prefix}/appraisal/admin/template?${queryParams.toString()}`,
       reqConfig
     );
 
-    return response.data; // ✅ unwrap Axios response
+    return response.data; 
   },
 
-  // ✅ Delete a survey template
-  deleteSurveyTemplate: async (id: string, reqConfig?: ReqConfig) => {
+  // Delete a survey template
+  deleteAppraisalTemplate: async (id: string, reqConfig?: ReqConfig) => {
     const response = await toolkitClient.delete(
-      `${prefix}/survey/template/${id}`,
+      `${prefix}/appraisal/template/${id}`,
       reqConfig
     );
     return response.data;
   },
 };
 
-export default surveyTemplateService;
+export default appraisalTemplatesService;

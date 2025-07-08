@@ -3,21 +3,20 @@ import SectionHeading from "../../ui/SectionHeading";
 import GradientText from "../../ui/GradientText";
 import CardContainer from "../../ui/CardContainer";
 import DashedGradientBox from "../../ui/DashedGradientBox";
-import surveyIcon from "../../../assets/images/svg/survey-icon.svg";
-import { useSurveyData } from "../../../hooks/templates/useSurveyData";
+import surveyIcon from "../../../assets/images/svg/survey-icon.svg"; // Reuse or create appraisal-specific icon
+import { useAppraisalData } from "../../../hooks/templates/useAppraisalData";
 import { Dialog } from "@headlessui/react";
 import { Pagination } from "../../common/Pagination"; 
 
-type SurveyTemplate = {
+type AppraisalTemplate = {
   id: string;
   title: string;
   createdAt: string;
   updatedAt: string;
   type: string;
- 
 };
 
-type SurveyTemplatesResponse = {
+type AppraisalTemplatesResponse = {
   status: string;
   message: string;
   data: {
@@ -29,17 +28,17 @@ type SurveyTemplatesResponse = {
       hasPreviousPage: boolean;
       hasNextPage: boolean;
     };
-    result: SurveyTemplate[];
+    result: AppraisalTemplate[];
   };
 };
 
-const SurveySection = () => {
+const AppraisalSection = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [take] = useState(10); // Items per page
 
-  const { getTemplates, deleteTemplate } = useSurveyData();
+  const { getTemplates, deleteTemplate } = useAppraisalData();
   
   // Get templates data with pagination
   const { 
@@ -48,7 +47,7 @@ const SurveySection = () => {
     isError,
     error
   } = getTemplates({ page: currentPage, take }) as {
-    data: SurveyTemplatesResponse | undefined;
+    data: AppraisalTemplatesResponse | undefined;
     isLoading: boolean;
     isError: boolean;
     error: any;
@@ -58,8 +57,8 @@ const SurveySection = () => {
   const templates = apiResponse?.data?.result || [];
   const pageMeta = apiResponse?.data?.pageMetaDto;
 
-  console.log("API Response:", apiResponse);
-  console.log("Page Meta:", pageMeta);
+  console.log("Appraisal API Response:", apiResponse);
+  console.log("Appraisal Page Meta:", pageMeta);
 
   const handleDelete = () => {
     if (selectedId) {
@@ -67,11 +66,9 @@ const SurveySection = () => {
         onSuccess: () => {
           setShowModal(false);
           setSelectedId(null);
-          // Optionally refresh data after deletion
-          // setCurrentPage(1);
         },
         onError: (deleteError: any) => {
-          console.error("Error deleting template:", deleteError);
+          console.error("Error deleting appraisal template:", deleteError);
           alert("Failed to delete the template. Please try again.");
         },
       });
@@ -80,41 +77,38 @@ const SurveySection = () => {
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
-    // Scroll to top when page changes
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
     <section className="w-full">
-      <SectionHeading>Survey Templates</SectionHeading>
+      <SectionHeading>Appraisal Templates</SectionHeading>
 
       <CardContainer className="">
         <div className="flex justify-between items-center mb-4">
           <DashedGradientBox>
             <GradientText>+Create</GradientText>
           </DashedGradientBox>
-          
-         
         </div>
 
 
-        {/* Survey Templates Grid */}
+        {/* Appraisal Templates Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 min-h-[200px]">
           {isLoading && (
             <div className="col-span-full flex justify-center py-8">
-              <p>Loading survey templates...</p>
+              <p>Loading appraisal templates...</p>
             </div>
           )}
 
           {isError && (
             <div className="col-span-full text-center py-4 text-red-500">
-              <p>Error loading surveys: {error?.message || "Unknown error"}</p>
+              <p>Error loading appraisals: {error?.message || "Unknown error"}</p>
             </div>
           )}
 
           {!isLoading && !isError && templates.length === 0 && (
-            <div className="col-span-full text-center py-4">
-              <p>No survey templates found</p>
+            <div className="col-span-full flex items-center justify-center py-4">
+              <p>No appraisal templates found</p>
             </div>
           )}
 
@@ -129,13 +123,13 @@ const SurveySection = () => {
             >
               <img 
                 src={surveyIcon} 
-                alt="Survey Icon" 
+                alt="Appraisal Icon" 
                 className="w-36 h-30 mb-2 object-contain"
               />
               <h3 className="font-medium text-center text-sm text-gray-800 mb-1">
-                {template.title || "Untitled Survey"}
+                {template.title || "Untitled Appraisal"}
               </h3>
-             
+              
             </div>
           ))}
         </div>
@@ -163,7 +157,7 @@ const SurveySection = () => {
                 Delete Template
               </Dialog.Title>
               <p className="mt-2 text-gray-600">
-                Are you sure you want to delete this template? This action cannot be undone.
+                Are you sure you want to delete this appraisal template? This action cannot be undone.
               </p>
 
               <div className="mt-6 flex justify-end gap-3">
@@ -188,4 +182,4 @@ const SurveySection = () => {
   );
 };
 
-export default SurveySection;
+export default AppraisalSection;
