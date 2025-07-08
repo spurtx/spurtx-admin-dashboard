@@ -31,6 +31,7 @@ export interface ProductListResponse<T> {
 
 const ENDPOINTS = {
   SKILLS: "/common/skills",
+  SKILLS_METHODS: "/admin/skills",
   PROJECT_CATEGORIES: "/common/all-project-categories",
   SERVICES: "/common/all-services",
   INDUSTRIES: "/common/all-industries",
@@ -47,7 +48,7 @@ export default function createProductListService({ api }: ApiService) {
     skill: Omit<Skill, 'id'>,
     config?: ReqConfig
   ): Promise<Skill> => {
-    const response = await api.post(ENDPOINTS.SKILLS, skill, config);
+    const response = await api.post(ENDPOINTS.SKILLS_METHODS, skill, config);
    
     return response.data?.data;
   };
@@ -58,7 +59,7 @@ export default function createProductListService({ api }: ApiService) {
     config?: ReqConfig
   ): Promise<Skill> => {
     const response = await api.put(
-      `${ENDPOINTS.SKILLS}/${id}`,
+      `${ENDPOINTS.SKILLS_METHODS}/${id}`,
       updateData,
       config
     );
@@ -69,7 +70,7 @@ export default function createProductListService({ api }: ApiService) {
     id: string,
     config?: ReqConfig
   ): Promise<void> => {
-    await api.delete(`${ENDPOINTS.SKILLS}/${id}`, config);
+    await api.delete(`${ENDPOINTS.SKILLS_METHODS}/${id}`, config);
   };
 
   // ================= Project Categories ===================

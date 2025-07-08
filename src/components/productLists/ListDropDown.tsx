@@ -51,7 +51,7 @@ const ListDropDown = ({
               <p className="text-gray-700 text-sm">{item.name}</p>
               <button 
                 onClick={() => onDelete(item.id)}
-                className="text-red-500 hover:text-red-700 cursor-pointer"
+                className="text-red-500 hover:text-red-700 text-sm cursor-pointer"
               >
                 <FaTimes />
               </button>
